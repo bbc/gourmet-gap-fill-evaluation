@@ -57,13 +57,6 @@
   "spec": {
     "requires": [
       "cloud-httpd24-ssl-no-certs"
-    ],
-    "executable": [
-      "./bake-scripts/*"
-    ],
-    "post": [
-      "mkdir -p /etc/bake-scripts/gourmet-gap-fill-evaluation",
-      "cp -rf /usr/lib/gourmet-gap-fill-evaluation/bake-scripts/* /etc/bake-scripts/gourmet-gap-fill-evaluation/"
     ]
   }
 }
