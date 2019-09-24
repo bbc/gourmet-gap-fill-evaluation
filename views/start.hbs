@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!-- Adding bootstrap CSS styles -->
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+
+        <meta charset="utf-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Gap Fill</title>
+        <link rel="stylesheet"
+              type="text/css"
+              href="main.css" />
+    </head>
+
+    <body class="bg-grey">
+        <div>
+            <img class="gourmet_logo"
+                 src="./media/horizontal_light.png" />
+        </div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="text-center text-primary-mid-green">Title</h1>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-10 margin-top-5percent h5 text-primary-dark-grey">
+                            <p>The evaluation process is not timed and there is no time limit. However each test set
+                                should be
+                                completed in an unbroken single sitting.</p>
+                            <p>Please start the test set when you will be able to give it your full attention to
+                                completion.</p>
+                            <p>If you have been asked to complete multiple test sets you don’t need to do them in one
+                                continuous sitting.</p>
+                            <p>If you are ready to complete an evaluation now, enter your ID and select the test set you
+                                have been asked to do.</p>
+                            <p>Thank you again for your time. Your language and linguistic skills are crucial to the
+                                success of this evaluation.</p>
+                        </div>
+                    </div>
+                    <form class="text-primary-dark-grey"
+                          action="/beginEvaluation"
+                          method="POST">
+                        <div class="row justify-content-center form-group">
+                            <div class="col-md-6">
+                                <label for="evaluatorId">Enter your evaluator ID:</label>
+                                <input class="form-control"
+                                       name="evaluatorId"
+                                       required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center form-group">
+                            <div class="col-md-6">
+                                <label for="setId">Pick the set you have been asked to
+                                    evaluate:</label>
+                                <select class="form-control"
+                                        name="setId"
+                                        required>
+                                    <option></option>
+                                    {{#each sentenceSets}}
+                                    <option value="{{this.setId}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center form-group">
+                            <div class="col-md-2">
+                                <button type="submit"
+                                        class="btn button-primary btn-block">Start
+                                    Evaluation</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

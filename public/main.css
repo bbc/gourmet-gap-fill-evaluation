@@ -1,0 +1,104 @@
+/* Project Colours */
+
+.text-primary-mid-green {
+  color: #95c11f;
+}
+
+.text-primary-dark-grey {
+  color: #3c3c3b;
+}
+
+.text-secondary-light-grey {
+  color: #e2e2e2;
+}
+
+.text-secondary-dark-purple {
+  color: #4e2671;
+}
+
+.text-secondary-lime-green {
+  color: #d7da18;
+}
+
+.text-secondary-pink-purple {
+  color: #992699;
+}
+
+.text-purple {
+  color: #4e1f78;
+}
+
+.bg-primary-mid-green {
+  background-color: #95c11f;
+}
+
+.bg-primary-dark-grey {
+  background-color: #3c3c3b;
+}
+
+.bg-secondary-light-grey {
+  background-color: #e2e2e2;
+}
+
+.bg-secondary-dark-purple {
+  background-color: #4e2671;
+}
+
+.bg-secondary-lime-green {
+  background-color: #d7da18;
+}
+
+.bg-secondary-pink-purple {
+  background-color: #992699;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.bg-grey {
+  background-color: #f2f2f2;
+}
+
+.button-primary {
+  background-color: #4e2671;
+  color: #e2e2e2;
+}
+
+.button-primary:hover {
+  color: #95c11f;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.height-70percent {
+  height: 70vh;
+}
+
+.margin-top-5percent {
+  margin-top: 5vh;
+}
+
+.gourmet_logo {
+  margin: 5vh;
+  height: 5vh;
+}
+
+.evaluation__subtitle {
+  margin-top: 2vh;
+  font-size: larger;
+}
+
+.evaluation__form {
+  margin-top: 2vh;
+  padding: 5vh;
+  background-color: #fff;
+  border: 0.25vh solid #e2e2e2;
+}
+
+.evaluation__form--word-input {
+  margin-top: 1vh;
+}
