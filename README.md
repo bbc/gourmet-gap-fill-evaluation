@@ -1,6 +1,8 @@
 # Gap Fill Evaluation Tool
 
-GoURMET project tool. The user is presented with a series of sentences that have been translated by a human and asked to 'fill in the gaps'. The evaluator fills in the gaps and based on how closely their answers match the quality of the translation model can be assessed.
+GoURMET project tool. The user is presented with a series of sentences. For each sentence there is an original sentence in the source language there is also a translation of that sentence that has been translated by a human and a translation of that sentence that has been translated by a machine translation system.
+
+The evaluator will be presented with the full sentence that has been translated by a human and the machine translated sentence with gaps in. They will be asked to 'fill in the gaps' in the machine translated sentence using the human translated sentence as a 'hint'.  The evaluator fills in the gaps and based on how closely their answers match the missing word the quality of the translation model can be assessed.
 
 # Set up
 1. Install [node v10](https://nodejs.org/en/)
