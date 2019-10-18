@@ -2,15 +2,15 @@ import sys
 import random
 from datetime import datetime
 
-# Script for randomising evaluation data sentence order.
+# Script for randomising evaluation data segment order.
 
 # This script takes a series of articles that have an original article
 # a human translated version of the article and a machine translated article split
 # across three text files. The script returns 3 files (original, human translation and
-# machine translation) which contain all the sentences from the articles provided and
-#  where the order of the sentences is consistent across the files i.e. sentence 1 in
-# the human translation file will be a translation of sentence 1 in the original file.
-# The sentences will have been shuffled so that they appear in a random order as opposed
+# machine translation) which contain all the segments from the articles provided and
+#  where the order of the segments is consistent across the files i.e. segment 1 in
+# the human translation file will be a translation of segment 1 in the original file.
+# The segments will have been shuffled so that they appear in a random order as opposed
 # to the order in the original articles.
 
 # Specify the files that are to be read in. The list must be in the same order for original, human translation and machine translation.
@@ -39,9 +39,9 @@ for i in range(num_of_files):
         "google_translation": google_translation_filenames[i]
     })
 
-sentences = []
+segments = []
 
-# Read files in and group sentences
+# Read files in and group segments
 for file_set in file_sets:
     original = open(file_set['original'], "r").readlines()
     human_translation = open(file_set['human_translation'], "r").readlines()
@@ -54,17 +54,17 @@ for file_set in file_sets:
             f'Files do not have the same number of lines in file set: {file_set}.')
 
     for i in range(len(original)):
-        sentences.append({
+        segments.append({
             "original": original[i],
             "human_translation": human_translation[i],
             "gourmet_translation": gourmet_translation[i],
             "google_translation": google_translation[i]
         })
 
-# Randomise the order of the sentences
-random.shuffle(sentences)
+# Randomise the order of the segments
+random.shuffle(segments)
 
-# Write the shuffled sentences back to files maintaining the order of the sentences across the files. i.e. sentence 1 in all files will have the same meaning.
+# Write the shuffled segments back to files maintaining the order of the segments across the files. i.e. segment 1 in all files will have the same meaning.
 
 time = datetime.now()
 
@@ -73,11 +73,13 @@ human_translation = open(f"human_translation_{time}.txt", 'w')
 gourmet_translation = open(f"gourmet_translation_{time}.txt", 'w')
 google_translation = open(f"google_translation_{time}.txt", 'w')
 
-for sentence in sentences:
-    original.write(sentence['original'])
-    human_translation.write(sentence['human_translation'])
-    gourmet_translation.write(sentence['gourmet_translation'])
-    google_translation.write(sentence['google_translation'])
+for segment in segments:
+    o = segment['human_translation'].split(' ')
+    if(len(o) >= 12):
+        original.write(segment['original'])
+        human_translation.write(segment['human_translation'])
+        gourmet_translation.write(segment['gourmet_translation'])
+        google_translation.write(segment['google_translation'])
 
 original.close()
 human_translation.close()

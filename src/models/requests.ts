@@ -1,17 +1,16 @@
 import { Request } from 'express';
 
-interface SentenceEvaluationRequestBody {
+interface SegmentEvaluationRequestBody {
   id: string;
   setId: string;
   evaluatorId: string;
-  numOfPracticeSentences: number;
   setSize: number;
-  sentenceNum: number;
+  segmentNum: number;
   numberOfTranslationSegments: number;
 }
 
-interface SentenceEvaluationRequest extends Request {
-  body: SentenceEvaluationRequestBody;
+interface SegmentEvaluationRequest extends Request {
+  body: SegmentEvaluationRequestBody;
 }
 
 interface FeedbackRequest extends Request {
@@ -33,9 +32,18 @@ interface StartBody {
   evaluatorId: string;
 }
 
+interface DatasetRequest extends Request {
+  body: DatasetBody;
+}
+
+interface DatasetBody {
+  setName: string;
+}
+
 export {
-  SentenceEvaluationRequest,
-  SentenceEvaluationRequestBody,
+  SegmentEvaluationRequest,
+  SegmentEvaluationRequestBody,
   FeedbackRequest,
   StartRequest,
+  DatasetRequest,
 };

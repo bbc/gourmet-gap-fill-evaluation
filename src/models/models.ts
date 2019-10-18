@@ -1,41 +1,33 @@
-import * as uuidv1 from 'uuid/v1';
-
-class SentenceSet {
-  public setId: string;
-
+class SegmentSet {
   constructor(
+    public setId: string,
     public name: string,
-    public sourceLanguage: Language,
-    public targetLanguage: Language,
-    public sentenceIds?: Set<string>,
-    setId?: string,
+    public sourceLanguage: string,
+    public targetLanguage: string,
+    public segmentIds?: Set<string>,
     public evaluatorIds?: Set<string>
-  ) {
-    this.setId = setId === undefined ? uuidv1() : setId;
-  }
+  ) {}
 }
 
-class Sentence {
-  public sentenceId: string;
-
+class Segment {
   constructor(
-    public original: string,
+    public id: string,
+    public translationSystem: string,
+    public source: string,
     public reference: string,
     public translation: string,
+    public type: string,
     public keys: string[],
-    public sourceLanguage: Language,
-    public targetLanguage: Language,
-    sentenceId?: string
-  ) {
-    this.sentenceId = sentenceId === undefined ? uuidv1() : sentenceId;
-  }
+    public sourceLanguage?: string,
+    public targetLanguage?: string
+  ) {}
 }
 
-enum Language {
-  BULGARIAN = 'bg',
-  GUJARATI = 'gu',
-  SWAHILI = 'sw',
-  ENGLISH = 'en',
+interface DatasetFile {
+  id: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  segments: Segment[];
 }
 
-export { SentenceSet, Sentence, Language };
+export { SegmentSet, Segment, DatasetFile };

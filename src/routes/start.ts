@@ -1,10 +1,10 @@
 import { Application, Request, Response } from 'express';
-import { getSentenceSets } from '../api';
+import { getSegmentSets } from '../api';
 
 const buildStartRoute = (app: Application) => {
   app.get('/start', (req: Request, res: Response) => {
-    getSentenceSets().then(sentenceSets => {
-      res.render('start', { sentenceSets, evaluatorIds });
+    getSegmentSets().then(segmentSets => {
+      res.render('start', { segmentSets, evaluatorIds });
     });
   });
 };
