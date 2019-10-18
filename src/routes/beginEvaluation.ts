@@ -1,57 +1,57 @@
 import { Response, Application } from 'express';
-import { getSentenceSet, putSentenceSet } from '../api';
+import { getSegmentSet, putSegmentSet } from '../api';
 import { StartRequest } from '../models/requests';
-import { SentenceSet } from '../models/models';
+import { SegmentSet } from '../models/models';
 
 const buildBeginEvaluationRoute = (app: Application) => {
   app.post('/beginEvaluation', (req: StartRequest, res: Response) => {
     const setId = req.body.setId;
     const evaluatorId = req.body.evaluatorId;
-    getSentenceSet(setId)
-      .then(sentenceSet => {
-        addEvaluatorIdToSentenceSet(evaluatorId, sentenceSet)
+    getSegmentSet(setId)
+      .then(segmentSet => {
+        addEvaluatorIdToSegmentSet(evaluatorId, segmentSet)
           .then(() => {
-            const sentenceIdsList = Array.from(
-              sentenceSet.sentenceIds || new Set()
+            const segmentIdsList = Array.from(
+              segmentSet.segmentIds || new Set()
             );
             res.redirect(
-              `/evaluation?setId=${setId}&numOfPracticeSentences=5&evaluatorId=${evaluatorId}&setSize=${sentenceIdsList.length}&currentSentenceNum=0`
+              `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&currentSegmentNum=0`
             );
           })
           .catch(error => {
             console.error(
-              `Unable to add evaluatorId:${evaluatorId} to sentence set:${setId}. Error: ${error}`
+              `Unable to add evaluatorId:${evaluatorId} to segment set:${setId}. Error: ${error}`
             );
             res.redirect('/error?errorCode=postStartFailEvaluatorId');
           });
       })
       .catch(error => {
         console.error(
-          `Unable to retrieve sentence set with id: ${setId}. Error: ${error}`
+          `Unable to retrieve segment set with id: ${setId}. Error: ${error}`
         );
-        res.redirect('/error?errorCode=postStartFailSentenceSet');
+        res.redirect('/error?errorCode=postStartFailSegmentSet');
       });
   });
 };
 
-const addEvaluatorIdToSentenceSet = (
+const addEvaluatorIdToSegmentSet = (
   evaluatorId: string,
-  sentenceSet: SentenceSet
+  segmentSet: SegmentSet
 ): Promise<string> => {
   const evaluatorIds: Set<string> =
-    sentenceSet.evaluatorIds === undefined
-      ? (sentenceSet.evaluatorIds = new Set([evaluatorId]))
-      : sentenceSet.evaluatorIds.add(evaluatorId);
+    segmentSet.evaluatorIds === undefined
+      ? (segmentSet.evaluatorIds = new Set([evaluatorId]))
+      : segmentSet.evaluatorIds.add(evaluatorId);
 
-  const updatedSentenceSet = new SentenceSet(
-    sentenceSet.name,
-    sentenceSet.sourceLanguage,
-    sentenceSet.targetLanguage,
-    sentenceSet.sentenceIds,
-    sentenceSet.setId,
+  const updatedSegmentSet = new SegmentSet(
+    segmentSet.setId,
+    segmentSet.name,
+    segmentSet.sourceLanguage,
+    segmentSet.targetLanguage,
+    segmentSet.segmentIds,
     evaluatorIds
   );
-  return putSentenceSet(updatedSentenceSet);
+  return putSegmentSet(updatedSegmentSet);
 };
 
 export { buildBeginEvaluationRoute };

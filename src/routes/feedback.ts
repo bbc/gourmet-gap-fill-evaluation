@@ -1,5 +1,5 @@
 import { Request, Response, Application } from 'express';
-import { putSentenceSetFeedback } from '../api';
+import { putSegmentSetFeedback } from '../api';
 import { FeedbackRequest } from '../models/requests';
 
 const buildFeedbackRoutes = (app: Application) => {
@@ -7,11 +7,11 @@ const buildFeedbackRoutes = (app: Application) => {
     const feedback: string = req.body.feedback;
     const setId: string = req.body.setId;
     const evaluatorId: string = req.body.evaluatorId;
-    putSentenceSetFeedback(setId, feedback, evaluatorId)
+    putSegmentSetFeedback(setId, feedback, evaluatorId)
       .then(() => res.redirect('/end'))
       .catch(error => {
         console.error(
-          `Could not save feedback: ${feedback} for sentence set id: ${setId}. Error:${error}`
+          `Could not save feedback: ${feedback} for segment set id: ${setId}. Error:${error}`
         );
         res.redirect('/error?errorCode=postFeedback');
       });

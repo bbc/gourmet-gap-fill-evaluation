@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!-- Adding bootstrap CSS styles -->
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous">
+
+        <meta charset="utf-8">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>Gap Fill</title>
+        <link rel="stylesheet"
+              type="text/css"
+              href="main.css" />
+    </head>
+
+    <body class="bg-grey">
+        <div>
+            <img class="gourmet_logo"
+                 src="./media/horizontal_light.png" />
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-10 text-primary-dark-grey">
+                    <h1 class="text-center text-primary-mid-green">Text for Evaluation</h1>
+                    <p class="margin-top-5percent">This page is for submission of data sets to be evaluated. The file
+                        provided MUST be a json file containing JSON of the following form:
+                    </p>
+                    <pre>
+                        <code>
+                        {
+                            "id": "string",
+                            "sourceLanguage": "string",
+                            "targetLanguage": "string",
+                            "segments":["SegmentObject"]
+                        }
+                        </code>
+                    </pre>
+                    <p>Where a SegmentObject has the following form:</p>
+                    <pre>
+                        <code>
+                        {
+                            "id": "string",
+                            "translationSystem": "string",
+                            "source": "string",
+                            "reference": "string",
+                            "translation": "string",
+                            "type": "string",
+                            "keys": ["string"]
+                        }
+                        </code>
+                    </pre>
+                    <form action="/dataset"
+                          method="POST"
+                          enctype="multipart/form-data">
+                        <div class="form-row align-bottom">
+                            <div class="form-group col-md-5">
+
+                                <label for="setName">Name of Segment Set</label>
+                                <input class="form-control"
+                                       name="setName"
+                                       id="setName"
+                                       required></input>
+                            </div>
+                            <div class="col-md-2"></div>
+                            <div class="form-group col-md-5">
+                                <label for="dataset">Choose file</label>
+                                <input type="file"
+                                       class="form-control-file"
+                                       name="dataset"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-row justify-content-right">
+                            <div class="form-group col-md-2">
+                                <button type="submit"
+                                        class="btn button-primary btn-block">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
