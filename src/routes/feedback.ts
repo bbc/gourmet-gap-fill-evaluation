@@ -1,5 +1,5 @@
 import { Request, Response, Application } from 'express';
-import { putSegmentSetFeedback } from '../api';
+import { putSegmentSetFeedback } from '../dynamoDB/api';
 import { FeedbackRequest } from '../models/requests';
 
 const buildFeedbackRoutes = (app: Application) => {

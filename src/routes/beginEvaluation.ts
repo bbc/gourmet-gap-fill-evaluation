@@ -1,5 +1,5 @@
 import { Response, Application } from 'express';
-import { getSegmentSet, putSegmentSet } from '../api';
+import { getSegmentSet, putSegmentSet } from '../dynamoDB/api';
 import { StartRequest } from '../models/requests';
 import { SegmentSet } from '../models/models';
 

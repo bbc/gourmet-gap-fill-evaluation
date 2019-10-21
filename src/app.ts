@@ -3,6 +3,7 @@ import { Application } from 'express';
 import * as multer from 'multer';
 import { Instance } from 'multer';
 
+import { loadConfig } from './config';
 import { buildIndexRoute } from './routes/index';
 import { buildStartRoute } from './routes/start';
 import { buildBeginEvaluationRoute } from './routes/beginEvaluation';
@@ -12,6 +13,9 @@ import { buildEndRoute } from './routes/end';
 import { buildStatusRoute } from './routes/status';
 import { buildDatasetRoutes } from './routes/dataset';
 import { buildSuccessRoute } from './routes/success';
+import { buildErrorRoute } from './routes/error';
+
+loadConfig();
 
 const app: Application = express();
 const port = process.env.PORT || 8080;
@@ -36,6 +40,7 @@ buildEndRoute(app);
 buildStatusRoute(app);
 buildDatasetRoutes(app, upload);
 buildSuccessRoute(app);
+buildErrorRoute(app);
 
 app.listen(port, () => {
   // tslint:disable-next-line:no-console
