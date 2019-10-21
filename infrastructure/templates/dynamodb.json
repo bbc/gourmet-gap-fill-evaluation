@@ -1,10 +1,16 @@
 {
     "Description": "DynamoDB tables for storing data for analysing gap fill data",
     "Outputs": {
-        "SegmentTableName": {
-            "Description": "Table name of the newly create DynamoDB table",
+        "SegmentSetsTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
             "Value": {
-                "Ref": "segmentPairsDynamoDBTable"
+                "Ref": "segmentSetsDynamoDBTable"
+            }
+        },
+        "SegmentTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
+            "Value": {
+                "Ref": "segmentsDynamoDBTable"
             }
         }
     },
@@ -16,6 +22,24 @@
             "MaxValue": "10000",
             "MinValue": "5",
             "Type": "Number"
+        },
+        "SegmentSetsTableHashKeyElementName": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumberic characters",
+            "Default": "setId",
+            "Description": "Segment Sets Table HashType PrimaryKey Name",
+            "MaxLength": "2048",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetsTableHashKeyElementType": {
+            "AllowedPattern": "[S]",
+            "ConstraintDescription": "must be S",
+            "Default": "S",
+            "Description": "Segment Sets HashType PrimaryKey Type",
+            "MaxLength": "1",
+            "MinLength": "1",
+            "Type": "String"
         },
         "SegmentTableHashKeyElementName": {
             "AllowedPattern": "[a-zA-Z0-9]*",
@@ -50,7 +74,61 @@
         }
     },
     "Resources": {
-        "segmentPairsDynamoDBTable": {
+        "segmentSetsDynamoDBTable": {
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsTableHashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "SegmentSetsTableHashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsTableHashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "ReadCapacityUnits"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "WriteCapacityUnits"
+                    }
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "SegmentSetsDynamoDBTable",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "app",
+                        "Value": "gap-fill-evaluation"
+                    },
+                    {
+                        "Key": "stage",
+                        "Value": {
+                            "Ref": "Stage"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::DynamoDB::Table"
+        },
+        "segmentsDynamoDBTable": {
             "Properties": {
                 "AttributeDefinitions": [
                     {

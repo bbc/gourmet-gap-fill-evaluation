@@ -15,7 +15,7 @@ const buildBeginEvaluationRoute = (app: Application) => {
               segmentSet.segmentIds || new Set()
             );
             res.redirect(
-              `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&currentSegmentNum=0`
+              `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&segmentNum=0`
             );
           })
           .catch(error => {
