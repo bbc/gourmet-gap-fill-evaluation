@@ -1,27 +1,69 @@
-import { DocumentClient } from './node_modules/aws-sdk/clients/dynamodb';
 import { Segment, SegmentSet } from '../models/models';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 const dynamoClient = new DocumentClient({ region: 'eu-west-1' });
+
+const getSegmentSetsTableName = (): string => {
+  return process.env.SEGMENT_SETS_TABLE_NAME || 'none';
+};
 
 const getSegmentsTableName = (): string => {
   return process.env.SEGMENTS_TABLE_NAME || 'none';
 };
 
 const getSegmentSets = (): Promise<SegmentSet[]> => {
-  return Promise.resolve([
-    new SegmentSet('123', 'set 1', 'bg', 'en', new Set(['1:inf24:KU-13:24'])),
-  ]);
+  const query = {
+    TableName: getSegmentSetsTableName(),
+  };
+
+  return dynamoClient
+    .scan(query)
+    .promise()
+    .then(output => {
+      const items = output.Items || [];
+      return items.map(segmentSet => {
+        return convertAttributeMapToSegmentSet(segmentSet);
+      });
+    });
 };
 
 const getSegmentSet = (setId: string): Promise<SegmentSet> => {
-  return Promise.resolve(
-    new SegmentSet('123', 'set 1', 'bg', 'en', new Set(['1:inf24:KU-13:24']))
-  );
+  const query = {
+    TableName: getSegmentSetsTableName(),
+    KeyConditionExpression: `setId = :id`,
+    ExpressionAttributeValues: {
+      ':id': setId,
+    },
+  };
+
+  return dynamoClient
+    .query(query)
+    .promise()
+    .then(output => {
+      if (
+        output.Count === undefined ||
+        output.Count < 1 ||
+        output.Items === undefined
+      ) {
+        throw new Error(`Set with id: ${setId} does not exist.`);
+      } else {
+        return convertAttributeMapToSegmentSet(output.Items[0]);
+      }
+    });
 };
 
-// tslint:disable-next-line:variable-name
 const putSegmentSet = (segmentSet: SegmentSet): Promise<string> => {
-  return Promise.resolve('ok');
+  const query = {
+    Item: constructSentenceSetItem(segmentSet),
+    TableName: getSegmentSetsTableName(),
+  };
+
+  return dynamoClient
+    .put(query)
+    .promise()
+    .then(() => {
+      return segmentSet.setId;
+    });
 };
 
 const getSegment = (id: string): Promise<Segment> => {
@@ -44,34 +86,12 @@ const getSegment = (id: string): Promise<Segment> => {
       ) {
         throw new Error(`Item with id: ${id} does not exist.`);
       } else {
-        const sentencePair: Segment = convertAttributeMapToSegment(
-          output.Items[0]
-        );
-        return sentencePair;
+        const segment: Segment = convertAttributeMapToSegment(output.Items[0]);
+        return segment;
       }
     });
 };
 
-const convertAttributeMapToSegment = (
-  item: DocumentClient.AttributeMap
-): Segment => {
-  const keys = item['keys'].split(':');
-  return new Segment(
-    item['id'],
-    item['translationSystem'],
-    item['source'],
-    item['reference'],
-    item['translation'],
-    item['type'],
-    keys,
-    item['sourceLanguage'],
-    item['targetLanguage']
-  );
-};
-
-/**
- * Returns the Id of the segment
- */
 const putSegment = (segmentData: Segment): Promise<string> => {
   const query = {
     Item: {
@@ -112,6 +132,92 @@ const putSegmentSetFeedback = (
   evaluatorId: string
 ): Promise<string> => {
   return Promise.resolve('ok');
+};
+
+// Helper Functions
+
+/**
+ * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a Segment object
+ */
+const convertAttributeMapToSegment = (
+  item: DocumentClient.AttributeMap
+): Segment => {
+  const keys = item['keys'].split(':');
+  return new Segment(
+    item['id'],
+    item['translationSystem'],
+    item['source'],
+    item['reference'],
+    item['translation'],
+    item['type'],
+    keys,
+    item['sourceLanguage'],
+    item['targetLanguage']
+  );
+};
+
+/**
+ * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentSet object
+ */
+const convertAttributeMapToSegmentSet = (
+  item: DocumentClient.AttributeMap
+): SegmentSet => {
+  const segmentIdsSet: DocumentClient.StringSet = item['segmentIds'];
+  const segmentIds = segmentIdsSet === undefined ? [] : segmentIdsSet.values;
+  const evaluatorIdsSet: DocumentClient.StringSet = item['evaluatorIds'];
+  const evaluatorIds =
+    evaluatorIdsSet === undefined ? [] : evaluatorIdsSet.values;
+  return new SegmentSet(
+    item['setId'],
+    item['name'],
+    item['sourceLanguage'],
+    item['targetLanguage'],
+    new Set(segmentIds),
+    new Set(evaluatorIds)
+  );
+};
+
+/** A set of segmentIds and a set of evaluatorIds can be undefined or empty.
+ * Some fairly horrible logic to ensure that an empty or undefined set is not put into dynamo
+ */
+const constructSentenceSetItem = (segmentSet: SegmentSet) => {
+  const segmentIds: Set<string> = segmentSet.segmentIds || new Set();
+  const evaluatorIds: Set<string> = segmentSet.evaluatorIds || new Set();
+  if (segmentIds.size < 1 && evaluatorIds.size < 1) {
+    return {
+      setId: segmentSet.setId,
+      name: segmentSet.name,
+      sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
+      targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+    };
+  }
+  if (segmentIds.size < 1) {
+    return {
+      setId: segmentSet.setId,
+      name: segmentSet.name,
+      sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
+      targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+      evaluatorIds: dynamoClient.createSet(Array.from(evaluatorIds)),
+    };
+  }
+  if (evaluatorIds.size < 1) {
+    return {
+      setId: segmentSet.setId,
+      segmentIds: dynamoClient.createSet(Array.from(segmentIds)),
+      name: segmentSet.name,
+      sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
+      targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+    };
+  } else {
+    return {
+      setId: segmentSet.setId,
+      segmentIds: dynamoClient.createSet(Array.from(segmentIds)),
+      name: segmentSet.name,
+      sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
+      targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+      evaluatorIds: dynamoClient.createSet(Array.from(evaluatorIds)),
+    };
+  }
 };
 
 export {
