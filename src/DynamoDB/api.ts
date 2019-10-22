@@ -1,5 +1,6 @@
 import { Segment, SegmentSet } from '../models/models';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import * as uuidv1 from 'uuid/v1';
 
 const dynamoClient = new DocumentClient({ region: 'eu-west-1' });
 
@@ -9,6 +10,10 @@ const getSegmentSetsTableName = (): string => {
 
 const getSegmentsTableName = (): string => {
   return process.env.SEGMENTS_TABLE_NAME || 'none';
+};
+
+const getSegmentSetFeedbackTableName = (): string => {
+  return process.env.SEGMENT_SET_FEEDBACK_TABLE_NAME || 'none';
 };
 
 const getSegmentSets = (): Promise<SegmentSet[]> => {
@@ -131,7 +136,23 @@ const putSegmentSetFeedback = (
   feedback: string,
   evaluatorId: string
 ): Promise<string> => {
-  return Promise.resolve('ok');
+  const feedbackId = uuidv1();
+  const query = {
+    Item: {
+      feedbackId,
+      setId,
+      feedback,
+      evaluatorId,
+    },
+    TableName: getSegmentSetFeedbackTableName(),
+  };
+
+  return dynamoClient
+    .put(query)
+    .promise()
+    .then(() => {
+      return feedbackId;
+    });
 };
 
 // Helper Functions
