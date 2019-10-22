@@ -59,11 +59,15 @@
                                                 {{#if @last}}
                                                 {{this}}
                                                 {{else}}
-                                                {{this}} <input class="evaluation__form--word-input"
+                                                {{this}} <input
+                                                       class="evaluation__form--word-input evaluation-gapfill-word"
                                                        name="{{@index}}"
-                                                       required />
+                                                       required
+                                                       pattern="[a-zA-Z]+"
+                                                       title="Must be a single word with no spaces" />
                                                 {{/if}}
-                                                {{/each}}</p>
+                                                {{/each}}
+                                            </p>
                                         </div>
                                     </div>
                                     <input type="hidden"
