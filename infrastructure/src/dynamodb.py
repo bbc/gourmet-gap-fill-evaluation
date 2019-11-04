@@ -82,6 +82,28 @@ segmentSetsFeedbackTableHashkeyType = t.add_parameter(Parameter(
     ConstraintDescription="must be S"
 ))
 
+segmentSetAnswersTableHashkeyName = t.add_parameter(Parameter(
+    "SegmentSetAnswersTableHashKeyElementName",
+    Description="Segment Set Answers Table HashType PrimaryKey Name",
+    Type="String",
+    Default="answerId",
+    AllowedPattern="[a-zA-Z0-9]*",
+    MinLength="1",
+    MaxLength="2048",
+    ConstraintDescription="must contain only alphanumberic characters"
+))
+
+segmentSetAnswersTableHashkeyType = t.add_parameter(Parameter(
+    "SegmentSetAnswersTableHashKeyElementType",
+    Description="Segment Set Answers HashType PrimaryKey Type",
+    Type="String",
+    Default="S",
+    AllowedPattern="[S]",
+    MinLength="1",
+    MaxLength="1",
+    ConstraintDescription="must be S"
+))
+
 readunits = t.add_parameter(Parameter(
     "ReadCapacityUnits",
     Description="Provisioned read throughput",
@@ -168,6 +190,28 @@ segmentSetsFeedbackDynamoDBTable = t.add_resource(Table(
     TableName=Join("-", ["SegmentSetsFeedbackDynamoDBTable", Ref(stage)])
 ))
 
+segmentSetAnswersDynamoDBTable = t.add_resource(Table(
+    "segmentSetAnswersDynamoDBTable",
+    AttributeDefinitions=[
+        AttributeDefinition(
+            AttributeName=Ref(segmentSetAnswersTableHashkeyName),
+            AttributeType=Ref(segmentSetAnswersTableHashkeyType)
+        ),
+    ],
+    KeySchema=[
+        KeySchema(
+            AttributeName=Ref(segmentSetAnswersTableHashkeyName),
+            KeyType="HASH"
+        )
+    ],
+    ProvisionedThroughput=ProvisionedThroughput(
+        ReadCapacityUnits=Ref(readunits),
+        WriteCapacityUnits=Ref(writeunits)
+    ),
+    Tags=Tags(app="gap-fill-evaluation", stage=Ref(stage)),
+    TableName=Join("-", ["SegmentSetAnswersDynamoDBTable", Ref(stage)])
+))
+
 t.add_output(Output(
     "SegmentTableName",
     Value=Ref(segmentDynamoDBTable),
@@ -183,6 +227,12 @@ t.add_output(Output(
 t.add_output(Output(
     "SegmentSetsFeedbackTableName",
     Value=Ref(segmentSetsFeedbackDynamoDBTable),
+    Description="Table name of the newly created DynamoDB table",
+))
+
+t.add_output(Output(
+    "SegmentSetAnswersTableName",
+    Value=Ref(segmentSetAnswersDynamoDBTable),
     Description="Table name of the newly created DynamoDB table",
 ))
 

@@ -54,6 +54,8 @@ const buildEvaluationRoutes = (app: Application) => {
                 evaluatorId,
                 setSize,
                 segmentNum: segmentNum + 1,
+                numberOfTranslationSegments: segment.translation.split('{ }')
+                  .length,
               });
             })
             .catch(error => {

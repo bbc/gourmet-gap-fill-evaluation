@@ -16,6 +16,10 @@ const getSegmentSetFeedbackTableName = (): string => {
   return process.env.SEGMENT_SET_FEEDBACK_TABLE_NAME || 'none';
 };
 
+const getSegmentSetAnswersTableName = (): string => {
+  return process.env.SEGMENT_SET_ANSWERS_TABLE_NAME || 'none';
+};
+
 const getSegmentSets = (): Promise<SegmentSet[]> => {
   const query = {
     TableName: getSegmentSetsTableName(),
@@ -128,7 +132,24 @@ const putSegmentAnswers = (
   answers: string[],
   evaluatorId: string
 ): Promise<string> => {
-  return Promise.resolve('ok');
+  const id = uuidv1();
+  const query = {
+    Item: {
+      answerId: id,
+      segmentId,
+      answers: answers.reduce((acc, key) => {
+        return `${acc}:${key}`;
+      }),
+      evaluatorId,
+    },
+    TableName: getSegmentSetAnswersTableName(),
+  };
+  return dynamoClient
+    .put(query)
+    .promise()
+    .then(() => {
+      return id;
+    });
 };
 
 const putSegmentSetFeedback = (
