@@ -12,6 +12,6 @@
   },
   "rulesDirectory": [],
   "linterOptions": {
-    "exclude": ["src/dynamoDB/api.ts"]
+    "exclude": ["src/dynamoDb/api.ts"]
   }
 }

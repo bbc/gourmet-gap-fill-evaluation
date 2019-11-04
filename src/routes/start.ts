@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import { getSegmentSets } from '../dynamoDB/api';
+import { getSegmentSets } from '../dynamoDb/api';
 
 const buildStartRoute = (app: Application) => {
   app.get('/start', (req: Request, res: Response) => {

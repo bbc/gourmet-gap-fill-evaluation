@@ -1,5 +1,5 @@
 import { Request, Response, Application } from 'express';
-import { getSegmentSet, getSegment, putSegmentAnswers } from '../dynamoDB/api';
+import { getSegmentSet, getSegment, putSegmentAnswers } from '../dynamoDb/api';
 import {
   SegmentEvaluationRequest,
   SegmentEvaluationRequestBody,
