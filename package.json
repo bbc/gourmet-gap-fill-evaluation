@@ -65,8 +65,8 @@
       "./bake-scripts/*"
     ],
     "post": [
-      "mkdir -p /etc/bake-scripts/gourmet-sentence-pairs-evaluation",
-      "cp -rf /usr/lib/gourmet-sentence-pairs-evaluation/bake-scripts/* /etc/bake-scripts/gourmet-sentence-pairs-evaluation/"
+      "mkdir -p /etc/bake-scripts/gourmet-gap-fill-evaluation",
+      "cp -rf /usr/lib/gourmet-gap-fill-evaluation/bake-scripts/* /etc/bake-scripts/gourmet-gap-fill-evaluation/"
     ]
   }
 }
