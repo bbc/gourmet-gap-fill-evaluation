@@ -33,6 +33,9 @@ const getSegmentSets = (): Promise<SegmentSet[]> => {
       return items.map(segmentSet => {
         return convertAttributeMapToSegmentSet(segmentSet);
       });
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -58,6 +61,9 @@ const getSegmentSet = (setId: string): Promise<SegmentSet> => {
       } else {
         return convertAttributeMapToSegmentSet(output.Items[0]);
       }
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -72,6 +78,9 @@ const putSegmentSet = (segmentSet: SegmentSet): Promise<string> => {
     .promise()
     .then(() => {
       return segmentSet.setId;
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -98,6 +107,9 @@ const getSegment = (id: string): Promise<Segment> => {
         const segment: Segment = convertAttributeMapToSegment(output.Items[0]);
         return segment;
       }
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -124,6 +136,9 @@ const putSegment = (segmentData: Segment): Promise<string> => {
     .promise()
     .then(() => {
       return segmentData.id;
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -149,6 +164,9 @@ const putSegmentAnswers = (
     .promise()
     .then(() => {
       return id;
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
@@ -173,6 +191,9 @@ const putSegmentSetFeedback = (
     .promise()
     .then(() => {
       return feedbackId;
+    })
+    .catch(error => {
+      throw error;
     });
 };
 
