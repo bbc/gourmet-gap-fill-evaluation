@@ -50,17 +50,21 @@ const submitDataset = (dataset: DatasetFile, name: string) => {
         return segment.id;
       });
     })
-  ).then(segmentIds => {
-    return putSegmentSet(
-      new SegmentSet(
-        dataset.id,
-        name,
-        dataset.sourceLanguage,
-        dataset.targetLanguage,
-        new Set(segmentIds)
-      )
-    );
-  });
+  )
+    .then(segmentIds => {
+      return putSegmentSet(
+        new SegmentSet(
+          dataset.id,
+          name,
+          dataset.sourceLanguage,
+          dataset.targetLanguage,
+          new Set(segmentIds)
+        )
+      );
+    })
+    .catch(error => {
+      throw error;
+    });
 };
 
 export { buildDatasetRoutes };
