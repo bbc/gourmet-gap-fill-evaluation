@@ -3,7 +3,7 @@ import { Instance } from 'multer';
 import { readFileSync, unlink } from 'fs';
 import { DatasetFile, SegmentSet } from '../models/models';
 import { DatasetRequest } from '../models/requests';
-import { putSegment, putSegmentSet } from '../api';
+import { putSegment, putSegmentSet } from '../dynamoDB/api';
 
 const buildDatasetRoutes = (app: Application, upload: Instance) => {
   app.get('/dataset', (req: Request, res: Response) => {

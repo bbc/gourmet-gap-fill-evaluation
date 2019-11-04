@@ -1,0 +1,342 @@
+{
+    "Description": "DynamoDB tables for storing data for analysing gap fill data",
+    "Outputs": {
+        "SegmentSetAnswersTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
+            "Value": {
+                "Ref": "segmentSetAnswersDynamoDBTable"
+            }
+        },
+        "SegmentSetsFeedbackTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
+            "Value": {
+                "Ref": "segmentSetsFeedbackDynamoDBTable"
+            }
+        },
+        "SegmentSetsTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
+            "Value": {
+                "Ref": "segmentSetsDynamoDBTable"
+            }
+        },
+        "SegmentTableName": {
+            "Description": "Table name of the newly created DynamoDB table",
+            "Value": {
+                "Ref": "segmentsDynamoDBTable"
+            }
+        }
+    },
+    "Parameters": {
+        "ReadCapacityUnits": {
+            "ConstraintDescription": "should be between 5 and 10000",
+            "Default": "5",
+            "Description": "Provisioned read throughput",
+            "MaxValue": "10000",
+            "MinValue": "5",
+            "Type": "Number"
+        },
+        "SegmentSetAnswersTableHashKeyElementName": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumberic characters",
+            "Default": "answerId",
+            "Description": "Segment Set Answers Table HashType PrimaryKey Name",
+            "MaxLength": "2048",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetAnswersTableHashKeyElementType": {
+            "AllowedPattern": "[S]",
+            "ConstraintDescription": "must be S",
+            "Default": "S",
+            "Description": "Segment Set Answers HashType PrimaryKey Type",
+            "MaxLength": "1",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetsFeedbackTableHashKeyElementName": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumberic characters",
+            "Default": "feedbackId",
+            "Description": "Segment Sets Feedback Table HashType PrimaryKey Name",
+            "MaxLength": "2048",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetsFeedbackTableHashKeyElementType": {
+            "AllowedPattern": "[S]",
+            "ConstraintDescription": "must be S",
+            "Default": "S",
+            "Description": "Segment Sets Feedback HashType PrimaryKey Type",
+            "MaxLength": "1",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetsTableHashKeyElementName": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumberic characters",
+            "Default": "setId",
+            "Description": "Segment Sets Table HashType PrimaryKey Name",
+            "MaxLength": "2048",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentSetsTableHashKeyElementType": {
+            "AllowedPattern": "[S]",
+            "ConstraintDescription": "must be S",
+            "Default": "S",
+            "Description": "Segment Sets HashType PrimaryKey Type",
+            "MaxLength": "1",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentTableHashKeyElementName": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumberic characters",
+            "Default": "id",
+            "Description": "Segment Table HashType PrimaryKey Name",
+            "MaxLength": "2048",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "SegmentTableHashKeyElementType": {
+            "AllowedPattern": "[S]",
+            "ConstraintDescription": "must be S",
+            "Default": "S",
+            "Description": "Segment HashType PrimaryKey Type",
+            "MaxLength": "1",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "Stage": {
+            "Default": "test",
+            "Description": "Development stage",
+            "Type": "String"
+        },
+        "WriteCapacityUnits": {
+            "ConstraintDescription": "should be between 5 and 10000",
+            "Default": "10",
+            "Description": "Provisioned write throughput",
+            "MaxValue": "10000",
+            "MinValue": "5",
+            "Type": "Number"
+        }
+    },
+    "Resources": {
+        "segmentSetAnswersDynamoDBTable": {
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetAnswersTableHashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "SegmentSetAnswersTableHashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetAnswersTableHashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "ReadCapacityUnits"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "WriteCapacityUnits"
+                    }
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "SegmentSetAnswersDynamoDBTable",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "app",
+                        "Value": "gap-fill-evaluation"
+                    },
+                    {
+                        "Key": "stage",
+                        "Value": {
+                            "Ref": "Stage"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::DynamoDB::Table"
+        },
+        "segmentSetsDynamoDBTable": {
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsTableHashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "SegmentSetsTableHashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsTableHashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "ReadCapacityUnits"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "WriteCapacityUnits"
+                    }
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "SegmentSetsDynamoDBTable",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "app",
+                        "Value": "gap-fill-evaluation"
+                    },
+                    {
+                        "Key": "stage",
+                        "Value": {
+                            "Ref": "Stage"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::DynamoDB::Table"
+        },
+        "segmentSetsFeedbackDynamoDBTable": {
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsFeedbackTableHashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "SegmentSetsFeedbackTableHashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentSetsFeedbackTableHashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "ReadCapacityUnits"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "WriteCapacityUnits"
+                    }
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "SegmentSetsFeedbackDynamoDBTable",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "app",
+                        "Value": "gap-fill-evaluation"
+                    },
+                    {
+                        "Key": "stage",
+                        "Value": {
+                            "Ref": "Stage"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::DynamoDB::Table"
+        },
+        "segmentsDynamoDBTable": {
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentTableHashKeyElementName"
+                        },
+                        "AttributeType": {
+                            "Ref": "SegmentTableHashKeyElementType"
+                        }
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": {
+                            "Ref": "SegmentTableHashKeyElementName"
+                        },
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": {
+                        "Ref": "ReadCapacityUnits"
+                    },
+                    "WriteCapacityUnits": {
+                        "Ref": "WriteCapacityUnits"
+                    }
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "SegmentsDynamoDBTable",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "app",
+                        "Value": "gap-fill-evaluation"
+                    },
+                    {
+                        "Key": "stage",
+                        "Value": {
+                            "Ref": "Stage"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::DynamoDB::Table"
+        }
+    }
+}

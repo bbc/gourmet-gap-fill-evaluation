@@ -1,5 +1,5 @@
 import { Response, Application } from 'express';
-import { getSegmentSet, putSegmentSet } from '../api';
+import { getSegmentSet, putSegmentSet } from '../dynamoDB/api';
 import { StartRequest } from '../models/requests';
 import { SegmentSet } from '../models/models';
 
@@ -15,7 +15,7 @@ const buildBeginEvaluationRoute = (app: Application) => {
               segmentSet.segmentIds || new Set()
             );
             res.redirect(
-              `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&currentSegmentNum=0`
+              `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&segmentNum=0`
             );
           })
           .catch(error => {

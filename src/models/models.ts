@@ -18,8 +18,8 @@ class Segment {
     public translation: string,
     public type: string,
     public keys: string[],
-    public sourceLanguage?: string,
-    public targetLanguage?: string
+    public sourceLanguage: string,
+    public targetLanguage: string
   ) {}
 }
 
