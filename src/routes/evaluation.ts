@@ -47,14 +47,14 @@ const buildEvaluationRoutes = (app: Application) => {
           getSegment(segmentId)
             .then(segment => {
               res.render('evaluation', {
-                reference: segment.reference,
-                translationSegments: segment.translation.split('{ }'),
+                hint: segment.hint,
+                translationSegments: segment.problem.split('{ }'),
                 setId,
                 segmentId,
                 evaluatorId,
                 setSize,
                 segmentNum: segmentNum + 1,
-                numberOfTranslationSegments: segment.translation.split('{ }')
+                numberOfTranslationSegments: segment.problem.split('{ }')
                   .length,
               });
             })
