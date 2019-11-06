@@ -65,8 +65,9 @@ for file_set in file_sets:
 random.shuffle(segments)
 
 # Write the shuffled segments back to files maintaining the order of the segments across the files. i.e. segment 1 in all files will have the same meaning.
+# Sentences with fewer than 12 words are excluded.
 
-time = datetime.now()
+time = datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
 
 original = open(f"original_{time}.txt", 'w')
 human_translation = open(f"human_translation_{time}.txt", 'w')
