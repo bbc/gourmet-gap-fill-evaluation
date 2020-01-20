@@ -27,7 +27,8 @@ const buildEvaluationRoutes = (app: Application) => {
         evaluatorId,
         answers,
         timeTaken,
-        body.sourceLanguage
+        body.sourceLanguage,
+        body.translationSystem
       )
     )
       .then(() =>
@@ -69,6 +70,7 @@ const buildEvaluationRoutes = (app: Application) => {
                   .length,
                 startTime: new Date().getTime(),
                 sourceLanguage: segment.sourceLanguage,
+                translationSystem: segment.translationSystem,
               });
             })
             .catch(error => {

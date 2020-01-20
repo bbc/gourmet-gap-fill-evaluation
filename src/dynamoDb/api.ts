@@ -156,6 +156,7 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
       }),
       timeTaken: segmentAnswer.timeTaken,
       sourceLanguage: segmentAnswer.sourceLanguage,
+      translationSystem: segmentAnswer.translationSystem,
     },
     TableName: getSegmentSetAnswersTableName(),
   };
