@@ -1,3 +1,5 @@
+import * as uuidv1 from 'uuid/v1';
+
 class SegmentSet {
   constructor(
     public setId: string,
@@ -25,6 +27,19 @@ class Segment {
   ) {}
 }
 
+class SegmentAnswer {
+  public answerId?: string;
+  constructor(
+    public segmentId: string,
+    public evaluatorId: string,
+    public answers: string[],
+    public timeTaken: number,
+    answerId?: string
+  ) {
+    this.answerId = answerId === undefined ? uuidv1() : answerId;
+  }
+}
+
 interface DatasetFile {
   id: string;
   sourceLanguage: string;
@@ -32,4 +47,4 @@ interface DatasetFile {
   segments: Segment[];
 }
 
-export { SegmentSet, Segment, DatasetFile };
+export { SegmentSet, Segment, SegmentAnswer, DatasetFile };
