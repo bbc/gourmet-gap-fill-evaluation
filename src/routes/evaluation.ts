@@ -29,7 +29,10 @@ const buildEvaluationRoutes = (app: Application) => {
         timeTaken,
         body.sourceLanguage,
         body.translationSystem,
-        body.correctAnswers
+        body.correctAnswers,
+        body.hint,
+        body.problem,
+        body.source
       )
     )
       .then(() =>
@@ -61,6 +64,8 @@ const buildEvaluationRoutes = (app: Application) => {
             .then(segment => {
               res.render('evaluation', {
                 hint: segment.hint,
+                problem: segment.problem,
+                source: segment.source,
                 translationSegments: segment.problem.split('{ }'),
                 setId,
                 segmentId,
