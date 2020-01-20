@@ -14,6 +14,7 @@ import { buildStatusRoute } from './routes/status';
 import { buildDatasetRoutes } from './routes/dataset';
 import { buildSuccessRoute } from './routes/success';
 import { buildErrorRoute } from './routes/error';
+import { buildExportDataRoutes } from './routes/exportData';
 
 loadConfig();
 
@@ -40,6 +41,7 @@ buildEndRoute(app);
 buildStatusRoute(app);
 buildDatasetRoutes(app, upload);
 buildSuccessRoute(app);
+buildExportDataRoutes(app);
 buildErrorRoute(app);
 
 app.listen(port, () => {
