@@ -1,6 +1,10 @@
 import { Segment, SegmentSet, SegmentAnswer } from '../models/models';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import * as uuidv1 from 'uuid/v1';
+import {
+  convertListToColonSeparatedString,
+  convertColonSeparatedStringToList,
+} from '../utils';
 
 const dynamoClient = new DocumentClient({ region: 'eu-west-1' });
 
@@ -125,9 +129,9 @@ const putSegment = (segmentData: Segment): Promise<string> => {
       gapDensity: segmentData.gapDensity,
       context: segmentData.context,
       entropyMode: segmentData.entropyMode,
-      correctAnswers: segmentData.correctAnswers.reduce((acc, answer) => {
-        return `${acc}:${answer}`;
-      }),
+      correctAnswers: convertListToColonSeparatedString(
+        segmentData.correctAnswers
+      ),
       sourceLanguage: segmentData.sourceLanguage,
       targetLanguage: segmentData.targetLanguage,
     },
@@ -152,13 +156,13 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
       answerId: id,
       segmentId: segmentAnswer.segmentId,
       evaluatorId: segmentAnswer.evaluatorId,
-      answers: segmentAnswer.answers.reduce((acc, key) => {
-        return `${acc}:${key}`;
-      }),
+      answers: convertListToColonSeparatedString(segmentAnswer.answers),
       timeTaken: segmentAnswer.timeTaken,
       sourceLanguage: segmentAnswer.sourceLanguage,
       translationSystem: segmentAnswer.translationSystem,
-      correctAnswers: segmentAnswer.correctAnswers,
+      correctAnswers: convertListToColonSeparatedString(
+        segmentAnswer.correctAnswers
+      ),
       hint: segmentAnswer.hint,
       problem: segmentAnswer.problem,
       source: segmentAnswer.source,
@@ -212,7 +216,6 @@ const putSegmentSetFeedback = (
 const convertAttributeMapToSegment = (
   item: DocumentClient.AttributeMap
 ): Segment => {
-  const correctAnswers = item['correctAnswers'].split(':');
   return new Segment(
     item['id'],
     item['translationSystem'],
@@ -223,7 +226,7 @@ const convertAttributeMapToSegment = (
     item['gapDensity'],
     item['context'],
     item['entropyMode'],
-    correctAnswers,
+    convertColonSeparatedStringToList(item['correctAnswers']),
     item['sourceLanguage'],
     item['targetLanguage']
   );

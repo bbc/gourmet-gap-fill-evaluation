@@ -14,6 +14,6 @@ const buildStartRoute = (app: Application) => {
   });
 };
 
-const evaluatorIds = ['tester'];
+const evaluatorIds = ['tester', 'BBC_1'];
 
 export { buildStartRoute };

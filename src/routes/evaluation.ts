@@ -5,6 +5,10 @@ import {
   SegmentEvaluationRequestBody,
 } from '../models/requests';
 import { SegmentAnswer } from '../models/models';
+import {
+  convertListToColonSeparatedString,
+  convertColonSeparatedStringToList,
+} from '../utils';
 
 const buildEvaluationRoutes = (app: Application) => {
   app.post('/evaluation', (req: SegmentEvaluationRequest, res: Response) => {
@@ -29,7 +33,7 @@ const buildEvaluationRoutes = (app: Application) => {
         timeTaken,
         body.sourceLanguage,
         body.translationSystem,
-        body.correctAnswers,
+        convertColonSeparatedStringToList(body.correctAnswers),
         body.hint,
         body.problem,
         body.source,
@@ -78,7 +82,9 @@ const buildEvaluationRoutes = (app: Application) => {
                 startTime: new Date().getTime(),
                 sourceLanguage: segment.sourceLanguage,
                 translationSystem: segment.translationSystem,
-                correctAnswers: segment.correctAnswers,
+                correctAnswers: convertListToColonSeparatedString(
+                  segment.correctAnswers
+                ),
                 translation: segment.translation,
               });
             })
