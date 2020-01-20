@@ -124,8 +124,8 @@ const putSegment = (segmentData: Segment): Promise<string> => {
       gapDensity: segmentData.gapDensity,
       context: segmentData.context,
       entropyMode: segmentData.entropyMode,
-      keys: segmentData.keys.reduce((acc, key) => {
-        return `${acc}:${key}`;
+      correctAnswers: segmentData.correctAnswers.reduce((acc, answer) => {
+        return `${acc}:${answer}`;
       }),
       sourceLanguage: segmentData.sourceLanguage,
       targetLanguage: segmentData.targetLanguage,
@@ -157,6 +157,7 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
       timeTaken: segmentAnswer.timeTaken,
       sourceLanguage: segmentAnswer.sourceLanguage,
       translationSystem: segmentAnswer.translationSystem,
+      correctAnswers: segmentAnswer.correctAnswers,
     },
     TableName: getSegmentSetAnswersTableName(),
   };
@@ -206,7 +207,7 @@ const putSegmentSetFeedback = (
 const convertAttributeMapToSegment = (
   item: DocumentClient.AttributeMap
 ): Segment => {
-  const keys = item['keys'].split(':');
+  const correctAnswers = item['correctAnswers'].split(':');
   return new Segment(
     item['id'],
     item['translationSystem'],
@@ -216,7 +217,7 @@ const convertAttributeMapToSegment = (
     item['gapDensity'],
     item['context'],
     item['entropyMode'],
-    keys,
+    correctAnswers,
     item['sourceLanguage'],
     item['targetLanguage']
   );
