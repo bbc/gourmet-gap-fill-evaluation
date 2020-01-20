@@ -155,6 +155,7 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
         return `${acc}:${key}`;
       }),
       timeTaken: segmentAnswer.timeTaken,
+      sourceLanguage: segmentAnswer.sourceLanguage,
     },
     TableName: getSegmentSetAnswersTableName(),
   };
