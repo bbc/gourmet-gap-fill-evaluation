@@ -35,6 +35,7 @@ class SegmentAnswer {
     public answers: string[],
     public timeTaken: number,
     public sourceLanguage: string,
+    public translationSystem: string,
     answerId?: string
   ) {
     this.answerId = answerId === undefined ? uuidv1() : answerId;

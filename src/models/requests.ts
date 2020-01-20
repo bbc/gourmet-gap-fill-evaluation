@@ -9,6 +9,7 @@ interface SegmentEvaluationRequestBody {
   numberOfTranslationSegments: number;
   startTime: number;
   sourceLanguage: string;
+  translationSystem: string;
 }
 
 interface SegmentEvaluationRequest extends Request {
