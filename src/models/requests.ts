@@ -48,10 +48,19 @@ interface DatasetBody {
   setName: string;
 }
 
+interface ExportRequest extends Request {
+  body: ExportBody;
+}
+
+interface ExportBody {
+  language: string;
+}
+
 export {
   SegmentEvaluationRequest,
   SegmentEvaluationRequestBody,
   FeedbackRequest,
   StartRequest,
   DatasetRequest,
+  ExportRequest,
 };
