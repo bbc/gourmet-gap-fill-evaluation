@@ -4,13 +4,14 @@ import {
   SegmentEvaluationRequest,
   SegmentEvaluationRequestBody,
 } from '../models/requests';
+import { SegmentAnswer } from '../models/models';
 
 const buildEvaluationRoutes = (app: Application) => {
   app.post('/evaluation', (req: SegmentEvaluationRequest, res: Response) => {
     const body: SegmentEvaluationRequestBody = req.body;
-    const id: string = body.id;
     const setId: string = body.setId;
     const evaluatorId: string = body.evaluatorId;
+    const segmentId: string = body.segmentId;
     const setSize = body.setSize || 0;
     const segmentNum = body.segmentNum;
     const numberOfTranslationSegments = body.numberOfTranslationSegments;
@@ -20,7 +21,9 @@ const buildEvaluationRoutes = (app: Application) => {
       numberOfTranslationSegments
     );
     const timeTaken = timeElapsed(startTime);
-    putSegmentAnswers(id, answers, evaluatorId, timeTaken)
+    putSegmentAnswers(
+      new SegmentAnswer(segmentId, evaluatorId, answers, timeTaken)
+    )
       .then(() =>
         res.redirect(
           `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${setSize}&segmentNum=${segmentNum}`
@@ -28,7 +31,7 @@ const buildEvaluationRoutes = (app: Application) => {
       )
       .catch(error => {
         console.error(
-          `Unable to store data: ${answers} for id: ${id} and evaluatorId: ${evaluatorId}. Error${error}`
+          `Unable to store data: ${answers} for id: ${segmentId} and evaluatorId: ${evaluatorId}. Error${error}`
         );
         res.redirect('/error?errorCode=postEvaluation');
       });
@@ -103,7 +106,7 @@ const timeElapsed = (
 const extractGapFillAnswersFromRequest = (
   request: SegmentEvaluationRequest,
   numberOfTranslationSegments: number
-) => {
+): string[] => {
   const answers = [];
   const numberOfGaps = numberOfTranslationSegments - 1;
   for (let i = 0; i < numberOfGaps; i++) {

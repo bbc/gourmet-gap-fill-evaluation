@@ -1,8 +1,8 @@
 import { Request } from 'express';
 
 interface SegmentEvaluationRequestBody {
-  id: string;
   setId: string;
+  segmentId: string;
   evaluatorId: string;
   setSize: number;
   segmentNum: number;
