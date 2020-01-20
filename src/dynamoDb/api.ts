@@ -132,8 +132,8 @@ const putSegment = (segmentData: Segment): Promise<string> => {
       correctAnswers: convertListToColonSeparatedString(
         segmentData.correctAnswers
       ),
-      sourceLanguage: segmentData.sourceLanguage,
-      targetLanguage: segmentData.targetLanguage,
+      sourceLanguage: segmentData.sourceLanguage.toUpperCase(),
+      targetLanguage: segmentData.targetLanguage.toUpperCase(),
     },
     TableName: getSegmentsTableName(),
   };
@@ -158,7 +158,7 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
       evaluatorId: segmentAnswer.evaluatorId,
       answers: convertListToColonSeparatedString(segmentAnswer.answers),
       timeTaken: segmentAnswer.timeTaken,
-      sourceLanguage: segmentAnswer.sourceLanguage,
+      sourceLanguage: segmentAnswer.sourceLanguage.toUpperCase(),
       translationSystem: segmentAnswer.translationSystem,
       correctAnswers: convertListToColonSeparatedString(
         segmentAnswer.correctAnswers
@@ -178,6 +178,25 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
     })
     .catch(error => {
       throw error;
+    });
+};
+
+const getSegmentAnswers = (
+  sourceLanguage: string
+): Promise<SegmentAnswer[]> => {
+  return dynamoClient
+    .scan({
+      FilterExpression: `sourceLanguage = :a and not (evaluatorId = :b)`,
+      ExpressionAttributeValues: {
+        ':a': sourceLanguage.toUpperCase(),
+        ':b': 'tester',
+      },
+      TableName: getSegmentSetAnswersTableName(),
+    })
+    .promise()
+    .then(output => {
+      const items = output.Items || [];
+      return items.map(item => convertAttributeMapToSegmentAnswer(item));
     });
 };
 
@@ -211,11 +230,35 @@ const putSegmentSetFeedback = (
 // Helper Functions
 
 /**
+ * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentAnswer object
+ */
+const convertAttributeMapToSegmentAnswer = (
+  item: DocumentClient.AttributeMap
+): SegmentAnswer => {
+  const answers = item['answers'] || '';
+  const correctAnswers = item['correctAnswers'] || '';
+  return new SegmentAnswer(
+    item['segmentId'],
+    item['evaluatorId'],
+    convertColonSeparatedStringToList(answers),
+    Number(item['timeTaken'] || 0),
+    item['sourceLanguage'],
+    item['translationSystem'],
+    convertColonSeparatedStringToList(correctAnswers),
+    item['hint'],
+    item['problem'],
+    item['source'],
+    item['answerId']
+  );
+};
+
+/**
  * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a Segment object
  */
 const convertAttributeMapToSegment = (
   item: DocumentClient.AttributeMap
 ): Segment => {
+  const correctAnswers = item['correctAnswers'] || '';
   return new Segment(
     item['id'],
     item['translationSystem'],
@@ -226,7 +269,7 @@ const convertAttributeMapToSegment = (
     item['gapDensity'],
     item['context'],
     item['entropyMode'],
-    convertColonSeparatedStringToList(item['correctAnswers']),
+    convertColonSeparatedStringToList(correctAnswers),
     item['sourceLanguage'],
     item['targetLanguage']
   );
@@ -302,6 +345,7 @@ export {
   putSegmentSet,
   getSegment,
   putSegment,
+  getSegmentAnswers,
   putSegmentAnswers,
   putSegmentSetFeedback,
 };
