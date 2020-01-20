@@ -21,7 +21,7 @@ class Segment {
     public gapDensity: string,
     public context: string,
     public entropyMode: string,
-    public keys: string[],
+    public correctAnswers: string[],
     public sourceLanguage: string,
     public targetLanguage: string
   ) {}
@@ -36,6 +36,7 @@ class SegmentAnswer {
     public timeTaken: number,
     public sourceLanguage: string,
     public translationSystem: string,
+    public correctAnswers: string,
     answerId?: string
   ) {
     this.answerId = answerId === undefined ? uuidv1() : answerId;

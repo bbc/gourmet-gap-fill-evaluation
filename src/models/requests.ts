@@ -10,6 +10,7 @@ interface SegmentEvaluationRequestBody {
   startTime: number;
   sourceLanguage: string;
   translationSystem: string;
+  correctAnswers: string;
 }
 
 interface SegmentEvaluationRequest extends Request {
