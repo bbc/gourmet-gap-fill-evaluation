@@ -14,11 +14,13 @@ const buildEvaluationRoutes = (app: Application) => {
     const setSize = body.setSize || 0;
     const segmentNum = body.segmentNum;
     const numberOfTranslationSegments = body.numberOfTranslationSegments;
+    const startTime: number = body.startTime || NaN;
     const answers = extractGapFillAnswersFromRequest(
       req,
       numberOfTranslationSegments
     );
-    putSegmentAnswers(id, answers, evaluatorId)
+    const timeTaken = timeElapsed(startTime);
+    putSegmentAnswers(id, answers, evaluatorId, timeTaken)
       .then(() =>
         res.redirect(
           `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${setSize}&segmentNum=${segmentNum}`
@@ -56,6 +58,7 @@ const buildEvaluationRoutes = (app: Application) => {
                 segmentNum: segmentNum + 1,
                 numberOfTranslationSegments: segment.problem.split('{ }')
                   .length,
+                startTime: new Date().getTime(),
               });
             })
             .catch(error => {
@@ -75,6 +78,17 @@ const buildEvaluationRoutes = (app: Application) => {
         res.redirect('/error?errorCode=getEvaluation');
       });
   });
+};
+
+const timeElapsed = (
+  timeStamp: number,
+  currentTime: number = new Date().getTime()
+): number => {
+  if (isNaN(timeStamp)) {
+    return 0;
+  } else {
+    return currentTime - timeStamp;
+  }
 };
 
 /**
@@ -100,4 +114,4 @@ const extractGapFillAnswersFromRequest = (
   return answers;
 };
 
-export { buildEvaluationRoutes };
+export { buildEvaluationRoutes, timeElapsed };

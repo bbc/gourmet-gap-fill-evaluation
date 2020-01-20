@@ -147,7 +147,8 @@ const putSegment = (segmentData: Segment): Promise<string> => {
 const putSegmentAnswers = (
   segmentId: string,
   answers: string[],
-  evaluatorId: string
+  evaluatorId: string,
+  timeTaken: number
 ): Promise<string> => {
   const id = uuidv1();
   const query = {
@@ -158,6 +159,7 @@ const putSegmentAnswers = (
         return `${acc}:${key}`;
       }),
       evaluatorId,
+      timeTaken,
     },
     TableName: getSegmentSetAnswersTableName(),
   };

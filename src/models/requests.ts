@@ -7,6 +7,7 @@ interface SegmentEvaluationRequestBody {
   setSize: number;
   segmentNum: number;
   numberOfTranslationSegments: number;
+  startTime: number;
 }
 
 interface SegmentEvaluationRequest extends Request {
