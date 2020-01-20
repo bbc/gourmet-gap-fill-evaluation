@@ -22,7 +22,13 @@ const buildEvaluationRoutes = (app: Application) => {
     );
     const timeTaken = timeElapsed(startTime);
     putSegmentAnswers(
-      new SegmentAnswer(segmentId, evaluatorId, answers, timeTaken)
+      new SegmentAnswer(
+        segmentId,
+        evaluatorId,
+        answers,
+        timeTaken,
+        body.sourceLanguage
+      )
     )
       .then(() =>
         res.redirect(
@@ -62,6 +68,7 @@ const buildEvaluationRoutes = (app: Application) => {
                 numberOfTranslationSegments: segment.problem.split('{ }')
                   .length,
                 startTime: new Date().getTime(),
+                sourceLanguage: segment.sourceLanguage,
               });
             })
             .catch(error => {
