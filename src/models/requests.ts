@@ -11,6 +11,9 @@ interface SegmentEvaluationRequestBody {
   sourceLanguage: string;
   translationSystem: string;
   correctAnswers: string;
+  hint: string;
+  problem: string;
+  source: string;
 }
 
 interface SegmentEvaluationRequest extends Request {
