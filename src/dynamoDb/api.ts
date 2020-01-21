@@ -1,4 +1,9 @@
-import { Segment, SegmentSet, SegmentAnswer } from '../models/models';
+import {
+  Segment,
+  SegmentSet,
+  SegmentAnswer,
+  SegmentSetFeedback,
+} from '../models/models';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import * as uuidv1 from 'uuid/v1';
 import {
@@ -201,17 +206,16 @@ const getSegmentAnswers = (
 };
 
 const putSegmentSetFeedback = (
-  setId: string,
-  feedback: string,
-  evaluatorId: string
+  segmentSetFeedback: SegmentSetFeedback
 ): Promise<string> => {
-  const feedbackId = uuidv1();
+  const feedbackId = segmentSetFeedback.feedbackId || uuidv1();
   const query = {
     Item: {
       feedbackId,
-      setId,
-      feedback,
-      evaluatorId,
+      setId: segmentSetFeedback.setId,
+      feedback: segmentSetFeedback.feedback,
+      evaluatorId: segmentSetFeedback.evaluatorId,
+      sourceLanguage: segmentSetFeedback.sourceLanguage,
     },
     TableName: getSegmentSetFeedbackTableName(),
   };

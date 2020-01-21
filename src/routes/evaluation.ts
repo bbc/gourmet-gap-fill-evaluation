@@ -95,7 +95,9 @@ const buildEvaluationRoutes = (app: Application) => {
               res.redirect('/error?errorCode=getEvaluation');
             });
         } else {
-          res.redirect(`/feedback?setId=${setId}&evaluatorId=${evaluatorId}`);
+          res.redirect(
+            `/feedback?setId=${setId}&evaluatorId=${evaluatorId}&sourceLanguage=${segmentSet.sourceLanguage}`
+          );
         }
       })
       .catch(error => {

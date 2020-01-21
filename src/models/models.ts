@@ -48,6 +48,19 @@ class SegmentAnswer {
   }
 }
 
+class SegmentSetFeedback {
+  public feedbackId: string;
+  constructor(
+    public evaluatorId: string,
+    public setId: string,
+    public feedback: string,
+    public sourceLanguage: string,
+    feedbackId?: string
+  ) {
+    this.feedbackId = feedbackId === undefined ? uuidv1() : feedbackId;
+  }
+}
+
 interface DatasetFile {
   id: string;
   sourceLanguage: string;
@@ -55,4 +68,4 @@ interface DatasetFile {
   segments: Segment[];
 }
 
-export { SegmentSet, Segment, SegmentAnswer, DatasetFile };
+export { SegmentSet, Segment, SegmentAnswer, SegmentSetFeedback, DatasetFile };
