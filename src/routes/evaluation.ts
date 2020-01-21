@@ -32,7 +32,8 @@ const buildEvaluationRoutes = (app: Application) => {
         body.correctAnswers,
         body.hint,
         body.problem,
-        body.source
+        body.source,
+        body.translation
       )
     )
       .then(() =>
@@ -78,6 +79,7 @@ const buildEvaluationRoutes = (app: Application) => {
                 sourceLanguage: segment.sourceLanguage,
                 translationSystem: segment.translationSystem,
                 correctAnswers: segment.correctAnswers,
+                translation: segment.translation,
               });
             })
             .catch(error => {

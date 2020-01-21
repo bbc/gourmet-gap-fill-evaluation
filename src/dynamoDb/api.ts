@@ -119,6 +119,7 @@ const putSegment = (segmentData: Segment): Promise<string> => {
       id: segmentData.id,
       translationSystem: segmentData.translationSystem,
       source: segmentData.source,
+      translation: segmentData.translation,
       hint: segmentData.hint,
       problem: segmentData.problem,
       gapDensity: segmentData.gapDensity,
@@ -161,6 +162,7 @@ const putSegmentAnswers = (segmentAnswer: SegmentAnswer): Promise<string> => {
       hint: segmentAnswer.hint,
       problem: segmentAnswer.problem,
       source: segmentAnswer.source,
+      translation: segmentAnswer.translation,
     },
     TableName: getSegmentSetAnswersTableName(),
   };
@@ -215,6 +217,7 @@ const convertAttributeMapToSegment = (
     item['id'],
     item['translationSystem'],
     item['source'],
+    item['translation'],
     item['hint'],
     item['problem'],
     item['gapDensity'],
