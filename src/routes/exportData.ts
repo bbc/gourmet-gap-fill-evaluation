@@ -5,6 +5,7 @@ import { SegmentAnswer } from '../models/models';
 import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
+import { groupBy, flatten } from 'underscore';
 
 const buildExportDataRoutes = (app: Application) => {
   getExportData(app);
@@ -74,15 +75,106 @@ const createAnswersCSVFile = (
   filename: string,
   language: string
 ) => {
+  const gapAnswers = transformSegmentAnswersToGapAnswers(answers, language);
+
   const csvWriter = createObjectCsvWriter({
     path: filename,
     header: [
-      { id: 'evaluatorId', title: 'evaluatorId' },
-      { id: 'sourceLanguage', title: 'sourceLanguage' },
+      { id: 'gapId', title: 'Gap Id' },
+      { id: 'evaluatorId', title: 'Evaluator Id' },
+      { id: 'segmentId', title: 'Sentence Id' },
+      { id: 'sourceLanguage', title: 'Source Language' },
+      { id: 'numOfGapsInSentence', title: 'Number of Gaps' },
+      { id: 'translationSystem', title: 'Hint Type' },
+      { id: 'correctAnswer', title: 'Missing Word' },
+      { id: 'answerGiven', title: 'Answer Given' },
+      { id: 'autoAnswerMatch', title: 'Auto Answer Match' },
+      { id: 'autoAnswerMatch', title: 'Manual Answer Match' },
+      { id: 'timeTaken', title: 'Sentence Submission Time' },
+      { id: 'meanTimePerGap', title: 'Mean Time per Gap' },
+      { id: 'problem', title: 'Sentence as seen by evaluator' },
+      { id: 'hint', title: 'Hint sentence as seen by evaluator' },
+      { id: 'source', title: 'Source' },
     ],
   });
 
-  csvWriter.writeRecords(answers);
+  csvWriter.writeRecords(gapAnswers);
 };
+
+const transformSegmentAnswersToGapAnswers = (
+  answers: SegmentAnswer[],
+  language: string
+): GapAnswer[] => {
+  const answersGroupedBySegmentId = groupBy<SegmentAnswer>(
+    answers,
+    'segmentId'
+  );
+  const segmentGroups: SegmentAnswer[][] = Object.values(
+    answersGroupedBySegmentId
+  );
+
+  // Segment Ids must be assigned human readable ids
+  const gapAnswers = segmentGroups.map((segmentAnswers, i) => {
+    return segmentAnswers.map(segmentAnswer =>
+      convertSegmentAnswerToGapAnswer(
+        `${language.toUpperCase()}_GF_${i + 1}`,
+        segmentAnswer
+      )
+    );
+  });
+  return flatten(gapAnswers);
+};
+
+const convertSegmentAnswerToGapAnswer = (
+  segmentId: string,
+  segmentAnswer: SegmentAnswer
+): GapAnswer[] => {
+  const answers = segmentAnswer.answers;
+  const correctAnswers = segmentAnswer.correctAnswers;
+  const meanTimePerGap = segmentAnswer.timeTaken / answers.length;
+
+  return answers.map((answer, i) => {
+    const isCorrect: string = checkAnswer(answer, correctAnswers[i]);
+
+    return new GapAnswer(
+      `${segmentId}_${i + 1}`,
+      segmentAnswer.evaluatorId,
+      segmentAnswer.sourceLanguage,
+      segmentId,
+      answers.length,
+      segmentAnswer.translationSystem,
+      correctAnswers[i],
+      answer,
+      isCorrect,
+      segmentAnswer.timeTaken,
+      meanTimePerGap,
+      segmentAnswer.problem,
+      segmentAnswer.hint,
+      segmentAnswer.source
+    );
+  });
+};
+
+const checkAnswer = (answer: string, correctAnswer: string): string =>
+  answer.toLowerCase() === correctAnswer.toLowerCase() ? 'YES' : 'NO';
+
+class GapAnswer {
+  constructor(
+    public gapId: string,
+    public evaluatorId: string,
+    public sourceLanguage: string,
+    public segmentId: string,
+    public numOfGapsInSentence: number,
+    public translationSystem: string,
+    public correctAnswer: string,
+    public answerGiven: string,
+    public autoAnswerMatch: string,
+    public timeTaken: number,
+    public meanTimePerGap: number,
+    public problem: string,
+    public hint: string,
+    public source: string
+  ) {}
+}
 
 export { buildExportDataRoutes };
