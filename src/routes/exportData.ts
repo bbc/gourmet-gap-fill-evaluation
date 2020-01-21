@@ -90,8 +90,8 @@ const createAnswersCSVFile = (
       { id: 'answerGiven', title: 'Answer Given' },
       { id: 'autoAnswerMatch', title: 'Auto Answer Match' },
       { id: 'autoAnswerMatch', title: 'Manual Answer Match' },
-      { id: 'timeTaken', title: 'Sentence Submission Time' },
-      { id: 'meanTimePerGap', title: 'Mean Time per Gap' },
+      { id: 'timeTaken', title: 'Sentence Submission Time (ms)' },
+      { id: 'meanTimePerGap', title: 'Mean Time per Gap (ms)' },
       { id: 'problem', title: 'Sentence as seen by evaluator' },
       { id: 'hint', title: 'Hint sentence as seen by evaluator' },
       { id: 'translation', title: 'Sentence without gaps' },
@@ -132,7 +132,9 @@ const convertSegmentAnswerToGapAnswer = (
 ): GapAnswer[] => {
   const answers = segmentAnswer.answers;
   const correctAnswers = segmentAnswer.correctAnswers;
-  const meanTimePerGap = segmentAnswer.timeTaken / answers.length;
+  const meanTimePerGapInMilliseconds = Math.round(
+    segmentAnswer.timeTaken / answers.length
+  );
 
   return answers.map((answer, i) => {
     const isCorrect: string = checkAnswer(answer, correctAnswers[i]);
@@ -148,7 +150,7 @@ const convertSegmentAnswerToGapAnswer = (
       answer,
       isCorrect,
       segmentAnswer.timeTaken,
-      meanTimePerGap,
+      meanTimePerGapInMilliseconds,
       segmentAnswer.problem,
       segmentAnswer.hint,
       segmentAnswer.translation,
