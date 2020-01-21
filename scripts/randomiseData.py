@@ -65,7 +65,7 @@ for file_set in file_sets:
 random.shuffle(segments)
 
 # Write the shuffled segments back to files maintaining the order of the segments across the files. i.e. segment 1 in all files will have the same meaning.
-# Sentences with fewer than 12 words are excluded.
+# Sentences with fewer than 15 words are excluded.
 
 time = datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
 
@@ -74,13 +74,19 @@ human_translation = open(f"human_translation_{time}.txt", 'w')
 gourmet_translation = open(f"gourmet_translation_{time}.txt", 'w')
 google_translation = open(f"google_translation_{time}.txt", 'w')
 
+def check_for_new_line(line):
+    if(line.endswith('\n') or line.endswith('\r')):
+        return line
+    else:
+        return line + '\n'
+
 for segment in segments:
     o = segment['human_translation'].split(' ')
-    if(len(o) >= 12):
-        original.write(segment['original'])
-        human_translation.write(segment['human_translation'])
-        gourmet_translation.write(segment['gourmet_translation'])
-        google_translation.write(segment['google_translation'])
+    if(len(o) >= 15):
+        original.write(check_for_new_line(segment['original']))
+        human_translation.write(check_for_new_line(segment['human_translation']))
+        gourmet_translation.write(check_for_new_line(segment['gourmet_translation']))
+        google_translation.write(check_for_new_line(segment['google_translation']))
 
 original.close()
 human_translation.close()
