@@ -94,6 +94,7 @@ const createAnswersCSVFile = (
       { id: 'meanTimePerGap', title: 'Mean Time per Gap' },
       { id: 'problem', title: 'Sentence as seen by evaluator' },
       { id: 'hint', title: 'Hint sentence as seen by evaluator' },
+      { id: 'translation', title: 'Sentence without gaps' },
       { id: 'source', title: 'Source' },
     ],
   });
@@ -150,6 +151,7 @@ const convertSegmentAnswerToGapAnswer = (
       meanTimePerGap,
       segmentAnswer.problem,
       segmentAnswer.hint,
+      segmentAnswer.translation,
       segmentAnswer.source
     );
   });
@@ -173,6 +175,7 @@ class GapAnswer {
     public meanTimePerGap: number,
     public problem: string,
     public hint: string,
+    public translation: string,
     public source: string
   ) {}
 }

@@ -248,6 +248,7 @@ const convertAttributeMapToSegmentAnswer = (
     item['hint'],
     item['problem'],
     item['source'],
+    item['translation'],
     item['answerId']
   );
 };
