@@ -16,6 +16,7 @@ class Segment {
     public id: string,
     public translationSystem: string,
     public source: string,
+    public translation: string,
     public hint: string,
     public problem: string,
     public gapDensity: string,
@@ -40,6 +41,7 @@ class SegmentAnswer {
     public hint: string,
     public problem: string,
     public source: string,
+    public translation: string,
     answerId?: string
   ) {
     this.answerId = answerId === undefined ? uuidv1() : answerId;
