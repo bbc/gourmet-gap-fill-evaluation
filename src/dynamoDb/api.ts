@@ -231,7 +231,38 @@ const putSegmentSetFeedback = (
     });
 };
 
+const getSegmentSetFeedback = (sourceLanguage: string) => {
+  return dynamoClient
+    .scan({
+      FilterExpression: `sourceLanguage = :a and not (evaluatorId = :b)`,
+      ExpressionAttributeValues: {
+        ':a': sourceLanguage.toUpperCase(),
+        ':b': 'tester',
+      },
+      TableName: getSegmentSetFeedbackTableName(),
+    })
+    .promise()
+    .then(output => {
+      const items = output.Items || [];
+      return items.map(item => convertAttributeMapToSentenceSetFeedback(item));
+    });
+};
+
 // Helper Functions
+
+/**
+ * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentSetFeedback object
+ */
+const convertAttributeMapToSentenceSetFeedback = (
+  item: DocumentClient.AttributeMap
+): SegmentSetFeedback =>
+  new SegmentSetFeedback(
+    item['feedbackId'],
+    item['setId'],
+    item['feedback'],
+    item['sourceLanguage'],
+    item['feedbackId']
+  );
 
 /**
  * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentAnswer object
@@ -353,4 +384,5 @@ export {
   getSegmentAnswers,
   putSegmentAnswers,
   putSegmentSetFeedback,
+  getSegmentSetFeedback,
 };
