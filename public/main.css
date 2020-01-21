@@ -102,3 +102,11 @@ html {
 .evaluation__form--word-input {
   margin-top: 1vh;
 }
+
+.index__footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 7vh; /* Set the fixed height of the footer here */
+  line-height: 7vh; /* Vertically center the text there */
+}
