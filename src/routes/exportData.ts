@@ -46,7 +46,7 @@ const sendData = (language: string, res: Response) => {
       console.error(
         `Could not retrieve data for language: ${language}. Error${error}`
       );
-      res.status(500).send('500');
+      res.redirect(500, '/error?errorCode=postExportDataFailCSVCreate');
     });
 };
 
