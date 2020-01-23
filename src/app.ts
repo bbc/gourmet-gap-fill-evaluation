@@ -5,6 +5,7 @@ import { Instance } from 'multer';
 
 import { loadConfig } from './config';
 import { buildIndexRoute } from './routes/index';
+import { buildInstructionsRoute } from './routes/instructions';
 import { buildStartRoute } from './routes/start';
 import { buildBeginEvaluationRoute } from './routes/beginEvaluation';
 import { buildEvaluationRoutes } from './routes/evaluation';
@@ -33,6 +34,7 @@ app.set('view engine', 'hbs');
 const upload: Instance = multer({ dest: 'uploads/' });
 
 buildIndexRoute(app);
+buildInstructionsRoute(app);
 buildStartRoute(app);
 buildBeginEvaluationRoute(app);
 buildEvaluationRoutes(app);
