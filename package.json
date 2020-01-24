@@ -5,6 +5,9 @@
   "author": "susiecoleman",
   "license": "UNLICENSED",
   "main": "./dist/app.js",
+  "engines": {
+    "node": ">=0.10"
+  },
   "scripts": {
     "start": "node .",
     "build": "tsc",
