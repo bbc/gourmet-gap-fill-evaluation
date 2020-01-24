@@ -82,9 +82,17 @@ html {
   margin-top: 5vh;
 }
 
+.margin-bottom-7percent {
+  margin-bottom: 7vh;
+}
+
 .gourmet_logo {
   margin: 5vh;
   height: 5vh;
+}
+
+.instructions_font-size {
+  font-size: 1.2rem;
 }
 
 .evaluation__subtitle {
