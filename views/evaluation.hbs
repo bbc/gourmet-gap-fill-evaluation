@@ -67,6 +67,8 @@
                                                        required
                                                        autocomplete="off"
                                                        pattern="[a-zA-Z0-9]+"
+                                                       {{#if @first}}autofocus="autofocus"
+                                                       {{/if}}
                                                        title="Must be a single word with no spaces" />
                                                 {{/if}}
                                                 {{/each}}
