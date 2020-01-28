@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express';
 import { ExportRequest } from '../models/requests';
-import { getSegmentAnswers, getSegmentSetFeedback } from '../dynamoDb/api';
-import { SegmentAnswer, SegmentSetFeedback } from '../models/models';
+import { getSegmentAnswers } from '../dynamoDb/api';
+import { SegmentAnswer } from '../models/models';
 import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
@@ -34,8 +34,8 @@ const postExportData = (app: Application) => {
 
 const sendData = (language: string, res: Response) => {
   const zipFileName = `/tmp/${language}.zip`;
-  Promise.all([generateFeedbackCSV(language), generateAnswersCSV(language)])
-    .then(fileToZip => zipFiles(fileToZip, zipFileName))
+  generateAnswersCSV(language)
+    .then(fileToZip => zipFiles([fileToZip], zipFileName))
     .then(_ => {
       res.set({
         'Content-Disposition': `attachment; filename="${language}.zip"`,
@@ -61,29 +61,6 @@ const zipFiles = (filesToZip: string[], zipFileName: string): Promise<void> => {
     stream.on('close', resolve);
     stream.on('error', reject);
   });
-};
-
-const generateFeedbackCSV = (language: string): Promise<string> => {
-  const filename = `/tmp/${language}-feedback.csv`;
-  return getSegmentSetFeedback(language)
-    .then(feedback => createFeedbackCSVFile(feedback, filename))
-    .then(_ => filename);
-};
-
-const createFeedbackCSVFile = (
-  feedback: SegmentSetFeedback[],
-  filename: string
-): Promise<void> => {
-  const csvWriter = createObjectCsvWriter({
-    path: filename,
-    header: [
-      { id: 'evaluatorId', title: 'Evaluator Id' },
-      { id: 'feedback', title: 'feedback' },
-      { id: 'sourceLanguage', title: 'Source Language' },
-    ],
-    encoding: 'utf8',
-  });
-  return csvWriter.writeRecords(feedback);
 };
 
 const generateAnswersCSV = (language: string) => {
