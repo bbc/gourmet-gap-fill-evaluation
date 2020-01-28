@@ -1,9 +1,4 @@
-import {
-  Segment,
-  SegmentSet,
-  SegmentAnswer,
-  SegmentSetFeedback,
-} from '../models/models';
+import { Segment, SegmentSet, SegmentAnswer } from '../models/models';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import * as uuidv1 from 'uuid/v1';
 import {
@@ -19,10 +14,6 @@ const getSegmentSetsTableName = (): string => {
 
 const getSegmentsTableName = (): string => {
   return process.env.SEGMENTS_TABLE_NAME || 'none';
-};
-
-const getSegmentSetFeedbackTableName = (): string => {
-  return process.env.SEGMENT_SET_FEEDBACK_TABLE_NAME || 'none';
 };
 
 const getSegmentSetAnswersTableName = (): string => {
@@ -205,64 +196,7 @@ const getSegmentAnswers = (
     });
 };
 
-const putSegmentSetFeedback = (
-  segmentSetFeedback: SegmentSetFeedback
-): Promise<string> => {
-  const feedbackId = segmentSetFeedback.feedbackId || uuidv1();
-  const query = {
-    Item: {
-      feedbackId,
-      setId: segmentSetFeedback.setId,
-      feedback: segmentSetFeedback.feedback,
-      evaluatorId: segmentSetFeedback.evaluatorId,
-      sourceLanguage: segmentSetFeedback.sourceLanguage,
-    },
-    TableName: getSegmentSetFeedbackTableName(),
-  };
-
-  return dynamoClient
-    .put(query)
-    .promise()
-    .then(() => {
-      return feedbackId;
-    })
-    .catch(error => {
-      throw error;
-    });
-};
-
-const getSegmentSetFeedback = (sourceLanguage: string) => {
-  return dynamoClient
-    .scan({
-      FilterExpression: `sourceLanguage = :a and not (evaluatorId = :b)`,
-      ExpressionAttributeValues: {
-        ':a': sourceLanguage.toUpperCase(),
-        ':b': 'tester',
-      },
-      TableName: getSegmentSetFeedbackTableName(),
-    })
-    .promise()
-    .then(output => {
-      const items = output.Items || [];
-      return items.map(item => convertAttributeMapToSentenceSetFeedback(item));
-    });
-};
-
 // Helper Functions
-
-/**
- * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentSetFeedback object
- */
-const convertAttributeMapToSentenceSetFeedback = (
-  item: DocumentClient.AttributeMap
-): SegmentSetFeedback =>
-  new SegmentSetFeedback(
-    item['feedbackId'],
-    item['setId'],
-    item['feedback'],
-    item['sourceLanguage'],
-    item['feedbackId']
-  );
 
 /**
  * DynamoDB returns an attribute map when queried. This converts a generic attribute map to a SegmentAnswer object
@@ -383,6 +317,4 @@ export {
   putSegment,
   getSegmentAnswers,
   putSegmentAnswers,
-  putSegmentSetFeedback,
-  getSegmentSetFeedback,
 };

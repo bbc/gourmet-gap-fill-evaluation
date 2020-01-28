@@ -21,17 +21,6 @@ interface SegmentEvaluationRequest extends Request {
   body: SegmentEvaluationRequestBody;
 }
 
-interface FeedbackRequest extends Request {
-  body: FeedbackRequestBody;
-}
-
-interface FeedbackRequestBody {
-  setId: string;
-  feedback: string;
-  evaluatorId: string;
-  sourceLanguage: string;
-}
-
 interface StartRequest extends Request {
   body: StartBody;
 }
@@ -60,7 +49,6 @@ interface ExportBody {
 export {
   SegmentEvaluationRequest,
   SegmentEvaluationRequestBody,
-  FeedbackRequest,
   StartRequest,
   DatasetRequest,
   ExportRequest,
