@@ -18,7 +18,6 @@ const buildStartRoute = (app: Application) => {
 };
 
 const evaluatorIds = [
-  'tester',
   'BBC_1',
   'BBC_2',
   'BBC_3',
@@ -28,6 +27,16 @@ const evaluatorIds = [
   'BBC_7',
   'BBC_8',
   'BBC_9',
+  'DW_1',
+  'DW_2',
+  'DW_3',
+  'DW_4',
+  'DW_5',
+  'DW_6',
+  'DW_7',
+  'DW_8',
+  'DW_9',
+  'tester',
 ];
 
 export { buildStartRoute };
