@@ -1,6 +1,6 @@
 from troposphere import Output, Parameter, Ref, Template, Tags, Join
 from troposphere.dynamodb import (KeySchema, AttributeDefinition,
-                                  ProvisionedThroughput)
+                                  ProvisionedThroughput, PointInTimeRecoverySpecification)
 from troposphere.dynamodb import Table
 from troposphere.iam import PolicyType
 
@@ -120,6 +120,7 @@ segmentDynamoDBTable = t.add_resource(Table(
         ReadCapacityUnits=Ref(readunits),
         WriteCapacityUnits=Ref(writeunits)
     ),
+    PointInTimeRecoverySpecification=PointInTimeRecoverySpecification(PointInTimeRecoveryEnabled=True),
     Tags=Tags(app="gap-fill-evaluation", stage=Ref(stage)),
     TableName=Join("-", ["SegmentsDynamoDBTable", Ref(stage)])
 ))
@@ -142,6 +143,7 @@ segmentSetsDynamoDBTable = t.add_resource(Table(
         ReadCapacityUnits=Ref(readunits),
         WriteCapacityUnits=Ref(writeunits)
     ),
+    PointInTimeRecoverySpecification=PointInTimeRecoverySpecification(PointInTimeRecoveryEnabled=True),
     Tags=Tags(app="gap-fill-evaluation", stage=Ref(stage)),
     TableName=Join("-", ["SegmentSetsDynamoDBTable", Ref(stage)])
 ))
@@ -164,6 +166,7 @@ segmentSetAnswersDynamoDBTable = t.add_resource(Table(
         ReadCapacityUnits=Ref(readunits),
         WriteCapacityUnits=Ref(writeunits)
     ),
+    PointInTimeRecoverySpecification=PointInTimeRecoverySpecification(PointInTimeRecoveryEnabled=True),
     Tags=Tags(app="gap-fill-evaluation", stage=Ref(stage)),
     TableName=Join("-", ["SegmentSetAnswersDynamoDBTable", Ref(stage)])
 ))
