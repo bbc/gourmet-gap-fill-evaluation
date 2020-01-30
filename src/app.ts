@@ -3,7 +3,6 @@ import { Application } from 'express';
 import * as multer from 'multer';
 import { Instance } from 'multer';
 
-import { loadConfig } from './config';
 import { buildIndexRoute } from './routes/index';
 import { buildInstructionsRoute } from './routes/instructions';
 import { buildStartRoute } from './routes/start';
@@ -16,7 +15,7 @@ import { buildSuccessRoute } from './routes/success';
 import { buildErrorRoute } from './routes/error';
 import { buildExportDataRoutes } from './routes/exportData';
 
-loadConfig();
+import './config';
 
 const app: Application = express();
 const port = process.env.PORT || 8080;
