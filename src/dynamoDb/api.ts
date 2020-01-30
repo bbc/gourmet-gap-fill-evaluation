@@ -69,7 +69,7 @@ const getSegmentSet = (setId: string): Promise<SegmentSet> => {
 
 const putSegmentSet = (segmentSet: SegmentSet): Promise<string> => {
   const query = {
-    Item: constructSentenceSetItem(segmentSet),
+    Item: constructSegmentSetItem(segmentSet),
     TableName: getSegmentSetsTableName(),
   };
 
@@ -272,7 +272,7 @@ const convertAttributeMapToSegmentSet = (
 /** A set of segmentIds and a set of evaluatorIds can be undefined or empty.
  * Some fairly horrible logic to ensure that an empty or undefined set is not put into dynamo
  */
-const constructSentenceSetItem = (segmentSet: SegmentSet) => {
+const constructSegmentSetItem = (segmentSet: SegmentSet) => {
   const segmentIds: Set<string> = segmentSet.segmentIds || new Set();
   const evaluatorIds: Set<string> = segmentSet.evaluatorIds || new Set();
   if (segmentIds.size < 1 && evaluatorIds.size < 1) {
