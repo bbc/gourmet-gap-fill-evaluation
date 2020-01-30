@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express';
 import { getSegmentSets } from '../dynamoDb/api';
+import { logger } from '../utils/logger';
 
 const buildStartRoute = (app: Application) => {
   app.get('/start', (req: Request, res: Response) => {
@@ -31,7 +32,7 @@ const buildStartRoute = (app: Application) => {
         });
       })
       .catch(error => {
-        console.error(`Could not get segment sets ${error}`);
+        logger.error(`Could not get segment sets ${error}`);
         res.redirect('/error');
       });
   });

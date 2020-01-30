@@ -2,6 +2,7 @@ import { Response, Application } from 'express';
 import { putSegmentSet, getSegmentSets } from '../dynamoDb/api';
 import { StartRequest } from '../models/requests';
 import { SegmentSet } from '../models/models';
+import { logger } from '../utils/logger';
 
 const buildBeginEvaluationRoute = (app: Application) => {
   app.post('/beginEvaluation', (req: StartRequest, res: Response) => {
@@ -19,14 +20,14 @@ const buildBeginEvaluationRoute = (app: Application) => {
             );
           })
           .catch(error => {
-            console.error(
+            logger.error(
               `Unable to add evaluatorId:${evaluatorId} to segment set:${segmentSet.setId}. Error: ${error}`
             );
             res.redirect('/error?errorCode=postStartFailEvaluatorId');
           });
       })
       .catch(error => {
-        console.error(
+        logger.error(
           `Unable to retrive a set with set name: ${setName}. Error: ${error}`
         );
         res.redirect('/error?errorCode=postStartFailSegmentSet');
@@ -60,7 +61,7 @@ const findSet = (setName: string): Promise<SegmentSet> =>
     const result = segmentSetsArray.find(set => set.name === setName);
     if (!result) {
       return Promise.reject(
-        `Unable to retrive a set with set name: ${setName}`
+        `Unable to retrieve a set with set name: ${setName}`
       );
     }
     return result;

@@ -16,6 +16,7 @@ import { buildErrorRoute } from './routes/error';
 import { buildExportDataRoutes } from './routes/exportData';
 
 import './config';
+import { logger } from './utils/logger';
 
 const app: Application = express();
 const port = process.env.PORT || 8080;
@@ -44,6 +45,5 @@ buildExportDataRoutes(app);
 buildErrorRoute(app);
 
 app.listen(port, () => {
-  // tslint:disable-next-line:no-console
-  console.log(`App running on port ${port}`);
+  logger.info(`App running on port ${port}`);
 });

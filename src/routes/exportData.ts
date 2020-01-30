@@ -6,6 +6,7 @@ import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
 import { groupBy, flatten } from 'underscore';
+import { logger } from '../utils/logger';
 
 const buildExportDataRoutes = (app: Application) => {
   getExportData(app);
@@ -59,7 +60,7 @@ const postExportData = (app: Application) => {
   app.post('/exportData', (req: ExportRequest, res: Response) => {
     const language: string = req.body.language;
     if (language === undefined) {
-      console.error(`Language not provided on POST request to export data`);
+      logger.error(`Language not provided on POST request to export data`);
       res.redirect(404, '/error?errorCode=postExportFailLanguage');
     } else {
       sendData(language, res);
@@ -78,7 +79,7 @@ const sendData = (language: string, res: Response) => {
       res.sendFile(zipFileName);
     })
     .catch(error => {
-      console.error(
+      logger.error(
         `Could not retrieve data for language: ${language}. Error${error}`
       );
       res.redirect(500, '/error?errorCode=postExportDataFailCSVCreate');

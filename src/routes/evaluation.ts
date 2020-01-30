@@ -9,6 +9,7 @@ import {
   convertListToColonSeparatedString,
   convertColonSeparatedStringToList,
 } from '../utils';
+import { logger } from '../utils/logger';
 
 const buildEvaluationRoutes = (app: Application) => {
   app.post('/evaluation', (req: SegmentEvaluationRequest, res: Response) => {
@@ -46,7 +47,7 @@ const buildEvaluationRoutes = (app: Application) => {
         )
       )
       .catch(error => {
-        console.error(
+        logger.error(
           `Unable to store data: ${answers} for id: ${segmentId} and evaluatorId: ${evaluatorId}. Error${error}`
         );
         res.redirect('/error?errorCode=postEvaluation');
@@ -89,7 +90,7 @@ const buildEvaluationRoutes = (app: Application) => {
               });
             })
             .catch(error => {
-              console.error(
+              logger.error(
                 `Unable to get segment with id ${segmentId}. Error: ${error}`
               );
               res.redirect('/error?errorCode=getEvaluation');
@@ -99,7 +100,7 @@ const buildEvaluationRoutes = (app: Application) => {
         }
       })
       .catch(error => {
-        console.error(
+        logger.error(
           `Unable to get segment set with id: ${setId}. Error: ${error}`
         );
         res.redirect('/error?errorCode=getEvaluation');

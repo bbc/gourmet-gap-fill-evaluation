@@ -4,6 +4,7 @@ import { readFileSync, unlink } from 'fs';
 import { DatasetFile, SegmentSet } from '../models/models';
 import { DatasetRequest } from '../models/requests';
 import { putSegment, putSegmentSet } from '../dynamoDb/api';
+import { logger } from '../utils/logger';
 
 const buildDatasetRoutes = (app: Application, upload: Instance) => {
   app.get('/dataset', (req: Request, res: Response) => {
@@ -23,7 +24,7 @@ const buildDatasetRoutes = (app: Application, upload: Instance) => {
           res.redirect('/success');
         })
         .catch(error => {
-          console.error(
+          logger.error(
             `Could not submit dataset:${JSON.stringify(
               dataset
             )}. Error: ${error}`
@@ -33,7 +34,7 @@ const buildDatasetRoutes = (app: Application, upload: Instance) => {
         .finally(() => {
           unlink(req.file.path, err => {
             if (err) {
-              console.error(`Failed to delete file ${req.file.path}`);
+              logger.error(`Failed to delete file ${req.file.path}`);
             }
           });
         });

@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 import * as dotenv from 'dotenv';
+import { logger } from './utils/logger';
 
 const result = dotenv.config();
 if (result.error) {
@@ -17,5 +18,5 @@ try {
     });
   }
 } catch (err) {
-  console.info('No override file found');
+  logger.info('No override file found');
 }

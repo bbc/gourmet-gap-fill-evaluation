@@ -1,10 +1,6 @@
 node_modules
 dist
 
-uploads
-
-scripts/*.txt
-
 venv
 bin
 lib
@@ -12,3 +8,6 @@ lib
 
 .DS_Store
 .vscode
+scripts/*.txt
+uploads
+logs
