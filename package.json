@@ -15,6 +15,7 @@
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
     "spec": "speculate --release ${BUILD_NUMBER}",
     "test": "yarn jest",
+    "pre-commit-tests": "yarn jest --bail --changedSince=master",
     "valid": "yarn lint && yarn build && yarn test"
   },
   "dependencies": {
