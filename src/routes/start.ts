@@ -8,7 +8,17 @@ const buildStartRoute = (app: Application) => {
         const setsOrderedByName = segmentSets.sort((a, b) =>
           a.name.localeCompare(b.name)
         );
-        res.render('start', { segmentSets: setsOrderedByName, evaluatorIds });
+        res.render('start', {
+          segmentSets: setsOrderedByName,
+          evaluatorIds,
+          paragraphs: [
+            'The evaluation process is timed but there is no time limit.',
+            'Please complete a series evaluation in an unbroken single sitting so that the timing is reflective of the time spent on the task.',
+            'If you are ready to complete an evaluation now, select your ID and the test set you have been asked to do.',
+            'Thank you again for your time.',
+            'If you are ready to begin now please click ‘Start Evaluation’.',
+          ],
+        });
       })
       .catch(error => {
         console.error(`Could not get segment sets ${error}`);
