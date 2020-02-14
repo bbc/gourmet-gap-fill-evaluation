@@ -108,6 +108,32 @@
                         "AttributeType": {
                             "Ref": "SegmentSetAnswersTableHashKeyElementType"
                         }
+                    },
+                    {
+                        "AttributeName": "sourceLanguage",
+                        "AttributeType": "S"
+                    }
+                ],
+                "GlobalSecondaryIndexes": [
+                    {
+                        "IndexName": "sourceLanguage",
+                        "KeySchema": [
+                            {
+                                "AttributeName": "sourceLanguage",
+                                "KeyType": "HASH"
+                            }
+                        ],
+                        "Projection": {
+                            "ProjectionType": "ALL"
+                        },
+                        "ProvisionedThroughput": {
+                            "ReadCapacityUnits": {
+                                "Ref": "ReadCapacityUnits"
+                            },
+                            "WriteCapacityUnits": {
+                                "Ref": "WriteCapacityUnits"
+                            }
+                        }
                     }
                 ],
                 "KeySchema": [
