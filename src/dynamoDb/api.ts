@@ -181,18 +181,20 @@ const getSegmentAnswers = (
   sourceLanguage: string
 ): Promise<SegmentAnswer[]> => {
   return dynamoClient
-    .scan({
-      FilterExpression: `sourceLanguage = :a and not (evaluatorId = :b)`,
+    .query({
+      IndexName: 'sourceLanguage',
       ExpressionAttributeValues: {
         ':a': sourceLanguage.toUpperCase(),
-        ':b': 'tester',
       },
+      KeyConditionExpression: 'sourceLanguage = :a',
       TableName: getSegmentSetAnswersTableName(),
     })
     .promise()
     .then(output => {
       const items = output.Items || [];
-      return items.map(item => convertAttributeMapToSegmentAnswer(item));
+      return items
+        .map(item => convertAttributeMapToSegmentAnswer(item))
+        .filter(item => item.evaluatorId !== 'tester');
     });
 };
 
