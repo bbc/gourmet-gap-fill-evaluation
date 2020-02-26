@@ -15,7 +15,12 @@ const buildExportDataRoutes = (app: Application) => {
 const getExportData = (app: Application) => {
   app.get('/exportData', (req: Request, res: Response) => {
     res.status(200).render('exportData', {
-      languageOptions: [{ language: 'bg', displayName: 'Bulgarian' }],
+      languageOptions: [
+        { language: 'bg', displayName: 'Bulgarian' },
+        { language: 'gu', displayName: 'Gujarati' },
+        { language: 'sw', displayName: 'Swahili' },
+        { language: 'tr', displayName: 'Turkish' },
+      ],
     });
   });
 };
