@@ -1,7 +1,7 @@
 import { Application, Request, Response } from 'express';
 import { ExportRequest } from '../models/requests';
-import { getSegmentAnswers } from '../dynamoDb/api';
-import { SegmentAnswer } from '../models/models';
+import { getSegmentAnswers, getSegmentSets } from '../dynamoDb/api';
+import { SegmentAnswer, SegmentSet, EvaluatorSet } from '../models/models';
 import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
@@ -14,15 +14,45 @@ const buildExportDataRoutes = (app: Application) => {
 
 const getExportData = (app: Application) => {
   app.get('/exportData', (req: Request, res: Response) => {
-    res.status(200).render('exportData', {
-      languageOptions: [
-        { language: 'bg', displayName: 'Bulgarian' },
-        { language: 'gu', displayName: 'Gujarati' },
-        { language: 'sw', displayName: 'Swahili' },
-        { language: 'tr', displayName: 'Turkish' },
-      ],
-    });
+    const languageOptions = [
+      { language: 'bg', displayName: 'Bulgarian' },
+      { language: 'gu', displayName: 'Gujarati' },
+      { language: 'sw', displayName: 'Swahili' },
+      { language: 'tr', displayName: 'Turkish' },
+    ];
+
+    getSegmentSets()
+      .then(segmentSets => {
+        const evaluatorSets = segmentSets
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(segmentSet => convertSegmentSetToEvaluatorSet(segmentSet));
+        res.status(200).render('exportData', {
+          languageOptions,
+          evaluatorSets,
+        });
+      })
+      .catch(error => {
+        console.error(`Could not get segment sets. Error: ${error}`);
+        res.status(200).render('exportData', {
+          languageOptions,
+          evaluatorSets: [],
+        });
+      });
   });
+};
+
+const convertSegmentSetToEvaluatorSet = (
+  segmentSet: SegmentSet
+): EvaluatorSet => {
+  const evaluatorIds = Array.from(segmentSet.evaluatorIds || []);
+  const evaluatorIdsAsString =
+    evaluatorIds.length === 0
+      ? 'NONE'
+      : evaluatorIds.reduce((acc, evaluator) => `${acc}, ${evaluator}`);
+  return {
+    setName: segmentSet.name,
+    evaluators: evaluatorIdsAsString,
+  };
 };
 
 const postExportData = (app: Application) => {
