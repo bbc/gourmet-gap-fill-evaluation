@@ -55,4 +55,9 @@ interface DatasetFile {
   segments: Segment[];
 }
 
-export { SegmentSet, Segment, SegmentAnswer, DatasetFile };
+interface EvaluatorSet {
+  setName: string;
+  evaluators: string;
+}
+
+export { SegmentSet, Segment, SegmentAnswer, DatasetFile, EvaluatorSet };
