@@ -1,11 +1,12 @@
 import { Response, Application } from 'express';
-import { getSegmentSet, putSegmentSet } from '../dynamoDb/api';
+import { getSegmentSet, putSegmentSet, getSegmentSets } from '../dynamoDb/api';
 import { StartRequest } from '../models/requests';
 import { SegmentSet } from '../models/models';
 
 const buildBeginEvaluationRoute = (app: Application) => {
   app.post('/beginEvaluation', (req: StartRequest, res: Response) => {
-    const setId = req.body.setId;
+    const setName = req.body.setName;
+    findSetId(setName).then(setId => {
     const evaluatorId = req.body.evaluatorId;
     getSegmentSet(setId)
       .then(segmentSet => {
@@ -30,8 +31,15 @@ const buildBeginEvaluationRoute = (app: Application) => {
           `Unable to retrieve segment set with id: ${setId}. Error: ${error}`
         );
         res.redirect('/error?errorCode=postStartFailSegmentSet');
-      });
-  });
+      })
+    })
+    .catch(error => {
+      console.error(
+        `Unable to retrive a set with set name: ${setName}. Error: ${error}`
+      );
+      res.redirect('/error?errorCode=postStartFailSegmentSet');
+    });
+  })
 };
 
 const addEvaluatorIdToSegmentSet = (
@@ -53,5 +61,15 @@ const addEvaluatorIdToSegmentSet = (
   );
   return putSegmentSet(updatedSegmentSet);
 };
+
+const findSetId = (setName: String) => getSegmentSets()
+  .then(segmentSets => {
+    const segmentSetsArray = Array.from(segmentSets)
+    const result = segmentSetsArray.find(set => set.name === setName)
+    if (!result)  {
+      return Promise.reject(`Unable to retrive a set with set name: ${setName}`)
+    }
+    return result.setId
+  });
 
 export { buildBeginEvaluationRoute };
