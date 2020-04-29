@@ -46,11 +46,12 @@
                                        id="set-choice"
                                        list="setName-values"
                                        class="form-control"
-                                       pattern="^[A-Z]{2}\s{1}(series|Series\b)\s{1}\d{1,}$">
-                                <datalist
-                                        id="setName-values"
-                                        required>
-                                    <option></option>
+                                       pattern="^[A-Z]{2}\s{1}(series|Series\b)\s{1}\d{1,}$"
+                                       onblur="javascript:location.search = '?setName=' + this.value;"
+                                       {{#if setName}}value="{{setName}}"{{/if}}
+                                       required
+                                       >
+                                <datalist id="setName-values">
                                     {{#each segmentSets}}
                                     <option value="{{this.name}}">{{this.name}}</option>
                                     {{/each}}
@@ -60,11 +61,12 @@
                         <div class="row justify-content-center form-group">
                             <div class="col-md-6">
                                 <label for="evaluatorId">Select your evaluator ID:</label>
-                                <select class="form-control"
+                                <select {{#unless possibleEvaluatorIds.length}}disabled{{/unless}}
+                                        class="form-control"
                                         name="evaluatorId"
                                         required>
-                                    <option></option>
-                                    {{#each evaluatorIds}}
+                                    <option disabled selected>Pick an evaluator ID</option>
+                                    {{#each possibleEvaluatorIds}}
                                     <option value={{this}}>{{this}}</option>
                                     {{/each}}
                                 </select>

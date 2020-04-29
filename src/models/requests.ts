@@ -27,6 +27,7 @@ interface StartRequest extends Request {
 
 interface StartBody {
   setId: string;
+  setName: string;
   evaluatorId: string;
 }
 
