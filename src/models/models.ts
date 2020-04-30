@@ -53,6 +53,7 @@ interface DatasetFile {
   sourceLanguage: string;
   targetLanguage: string;
   segments: Segment[];
+  evaluatorIds: Set<string>;
 }
 
 interface EvaluatorSet {
