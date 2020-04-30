@@ -5,7 +5,7 @@ const getErrorText = (errorCode: string): string => {
     case 'getEvaluation':
       return 'Unable to retrieve segment.';
     case 'postStartFailSegmentSet':
-      return 'Could not get set of segments for evaluation.';
+      return 'A set of segments with the name provided does not exist. Please enter a correct set name.';
     case 'postStartFailEvaluatorId':
       return 'Could not save your evaluation ID.';
     case 'postDataset':
