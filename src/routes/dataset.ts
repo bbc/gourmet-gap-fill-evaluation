@@ -58,7 +58,8 @@ const submitDataset = (dataset: DatasetFile, name: string) => {
           name,
           dataset.sourceLanguage,
           dataset.targetLanguage,
-          new Set(segmentIds)
+          new Set(segmentIds),
+          dataset.evaluatorIds
         )
       );
     })
