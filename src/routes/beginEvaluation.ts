@@ -6,7 +6,7 @@ import { SegmentSet } from '../models/models';
 const buildBeginEvaluationRoute = (app: Application) => {
   app.post('/beginEvaluation', (req: StartRequest, res: Response) => {
     const setName = req.body.setName;
-    findSetId(setName)
+    findSet(setName)
       .then(segmentSet => {
         const evaluatorId = req.body.evaluatorId;
         addEvaluatorIdToSegmentSet(evaluatorId, segmentSet)
@@ -54,7 +54,7 @@ const addEvaluatorIdToSegmentSet = (
   return putSegmentSet(updatedSegmentSet);
 };
 
-const findSetId = (setName: String) =>
+const findSet = (setName: String): Promise<SegmentSet> =>
   getSegmentSets().then(segmentSets => {
     const segmentSetsArray = Array.from(segmentSets);
     const result = segmentSetsArray.find(set => set.name === setName);
