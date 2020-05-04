@@ -54,7 +54,7 @@ const addEvaluatorIdToSegmentSet = (
   return putSegmentSet(updatedSegmentSet);
 };
 
-const findSet = (setName: String): Promise<SegmentSet> =>
+const findSet = (setName: string): Promise<SegmentSet> =>
   getSegmentSets().then(segmentSets => {
     const segmentSetsArray = Array.from(segmentSets);
     const result = segmentSetsArray.find(set => set.name === setName);
