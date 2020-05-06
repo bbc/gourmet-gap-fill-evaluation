@@ -21,9 +21,7 @@ const logger: Logger = createLogger({
   }),
 });
 
-if (process.env.NODE_ENV === 'development') {
-  logger.add(new Console());
-} else {
+if (process.env.NODE_ENV === 'production') {
   logger.add(
     new WinstonCloudWatch({
       level: process.env.LOG_LEVEL,
@@ -32,6 +30,8 @@ if (process.env.NODE_ENV === 'development') {
       awsRegion: process.env.AWS_REGION,
     })
   );
+} else {
+  logger.add(new Console());
 }
 
 export { logger };
