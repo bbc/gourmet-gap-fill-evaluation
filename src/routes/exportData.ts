@@ -33,7 +33,7 @@ const getExportData = (app: Application) => {
         });
       })
       .catch(error => {
-        console.error(`Could not get segment sets. Error: ${error}`);
+        logger.error(`Could not get segment sets. Error: ${error}`);
         res.status(200).render('exportData', {
           languageOptions,
           evaluatorSets: [],
