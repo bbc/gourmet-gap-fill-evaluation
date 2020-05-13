@@ -9,6 +9,7 @@ This tool was built as part of the [GoURMET Project](https://gourmet-project.eu/
 1. [What is Gap Fill?](#what-is-gap-fill)
 2. [Admin Guide](./docs/admin.md)
 3. [Developer Guide](./docs/development.md)
+4. [User Guide](./docs/users.md)
 
 ## What is Gap Fill
 
@@ -17,7 +18,3 @@ This tool was built as part of the [GoURMET Project](https://gourmet-project.eu/
 To complete [Gap Fill Evaluation](https://arxiv.org/abs/1809.00315) the user is presented with a series of segments. For each segment there is an original segment in the source language there is also a translation of that segment that has been translated by a human and a translation of that segment that has been translated by a machine translation system.
 
 The evaluator will be presented with the full segment that has been translated by a human and the machine translated segment with gaps in. They will be asked to 'fill in the gaps' in the machine translated segment using the human translated segment as a 'hint'.  The evaluator fills in the gaps and based on how closely their answers match the missing word the quality of the translation model can be assessed.
-
-## Creating Data Sets for the App
-
-TODO: Add link to Mikel's scripts for creating a data set once they have been open sourced.
