@@ -1,6 +1,21 @@
-# Using the Gap Fill Evaluation Tool
+# Admin Guide
+
+This guide describes the administration tasks required to set up and use the Gap Fill Tool for carrying out Direct Assessment This tool is open sourced under GPL v3. Issues should be raised via the GitHub issues. Code changes can be proposed by opening a pull request.
 
 To use the tool a database and client need to be set up as well as credentials to allow the client to connect to the database
+
+## Prerequisites
+
+1. [AWS Account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/)
+2. [Docker](https://docs.docker.com/get-docker/) installed on your machine.
+
+## Solution Pricing
+
+The database used is [DynamoDB](https://aws.amazon.com/dynamodb/) this is a paid for AWS Service please be aware of the [costs](https://aws.amazon.com/dynamodb/pricing/) of database reads and writes before creating and using tables.
+
+## Architecture
+
+![](./images/basicArchitecture.png)
 
 ## Database set up
 
