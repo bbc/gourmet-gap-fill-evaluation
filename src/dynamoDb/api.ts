@@ -221,7 +221,8 @@ const convertAttributeMapToSegmentAnswer = (
     item['problem'],
     item['source'],
     item['translation'],
-    item['answerId']
+    item['answerId'],
+    Number(item['timestamp'] || -1)
   );
 };
 

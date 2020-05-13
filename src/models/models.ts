@@ -29,7 +29,8 @@ class Segment {
 }
 
 class SegmentAnswer {
-  public answerId?: string;
+  public answerId: string;
+  public timestamp: number;
   constructor(
     public segmentId: string,
     public evaluatorId: string,
@@ -42,9 +43,11 @@ class SegmentAnswer {
     public problem: string,
     public source: string,
     public translation: string,
-    answerId?: string
+    answerId?: string,
+    timestamp?: number
   ) {
     this.answerId = answerId === undefined ? uuidv1() : answerId;
+    this.timestamp = timestamp === undefined ? -1 : timestamp;
   }
 }
 
@@ -61,4 +64,31 @@ interface EvaluatorSet {
   evaluators: string;
 }
 
-export { SegmentSet, Segment, SegmentAnswer, DatasetFile, EvaluatorSet };
+class GapAnswer {
+  constructor(
+    public gapId: string,
+    public evaluatorId: string,
+    public sourceLanguage: string,
+    public segmentId: string,
+    public numOfGapsInSentence: number,
+    public translationSystem: string,
+    public correctAnswer: string,
+    public answerGiven: string,
+    public autoAnswerMatch: string,
+    public timeTaken: number,
+    public meanTimePerGap: number,
+    public problem: string,
+    public hint: string,
+    public translation: string,
+    public source: string
+  ) {}
+}
+
+export {
+  SegmentSet,
+  Segment,
+  SegmentAnswer,
+  DatasetFile,
+  EvaluatorSet,
+  GapAnswer,
+};
