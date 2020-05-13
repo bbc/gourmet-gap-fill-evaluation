@@ -1,11 +1,16 @@
 import { Application, Request, Response } from 'express';
 import { ExportRequest } from '../models/requests';
 import { getSegmentAnswers, getSegmentSets } from '../dynamoDb/api';
-import { SegmentAnswer, SegmentSet, EvaluatorSet } from '../models/models';
+import {
+  SegmentAnswer,
+  SegmentSet,
+  EvaluatorSet,
+  GapAnswer,
+} from '../models/models';
 import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
-import { groupBy, flatten } from 'underscore';
+import { flatten } from 'underscore';
 import { logger } from '../utils/logger';
 
 const buildExportDataRoutes = (app: Application) => {
@@ -111,7 +116,9 @@ const createAnswersCSVFile = (
   filename: string,
   language: string
 ) => {
-  const gapAnswers = transformSegmentAnswersToGapAnswers(answers, language);
+  const gapAnswers: GapAnswer[] = flatten(
+    answers.map(answer => convertSegmentAnswerToGapAnswer(answer))
+  );
 
   const csvWriter = createObjectCsvWriter({
     path: filename,
@@ -138,32 +145,7 @@ const createAnswersCSVFile = (
   csvWriter.writeRecords(gapAnswers);
 };
 
-const transformSegmentAnswersToGapAnswers = (
-  answers: SegmentAnswer[],
-  language: string
-): GapAnswer[] => {
-  const answersGroupedBySegmentId = groupBy<SegmentAnswer>(
-    answers,
-    'segmentId'
-  );
-  const segmentGroups: SegmentAnswer[][] = Object.values(
-    answersGroupedBySegmentId
-  );
-
-  // Segment Ids must be assigned human readable ids
-  const gapAnswers = segmentGroups.map((segmentAnswers, i) => {
-    return segmentAnswers.map(segmentAnswer =>
-      convertSegmentAnswerToGapAnswer(
-        `${language.toUpperCase()}_GF_${i + 1}`,
-        segmentAnswer
-      )
-    );
-  });
-  return flatten(gapAnswers);
-};
-
 const convertSegmentAnswerToGapAnswer = (
-  segmentId: string,
   segmentAnswer: SegmentAnswer
 ): GapAnswer[] => {
   const answers = segmentAnswer.answers;
@@ -176,10 +158,10 @@ const convertSegmentAnswerToGapAnswer = (
     const isCorrect: string = checkAnswer(answer, correctAnswers[i]);
 
     return new GapAnswer(
-      `${segmentId}_${i + 1}`,
+      `${segmentAnswer.segmentId}_${i + 1}`,
       segmentAnswer.evaluatorId,
       segmentAnswer.sourceLanguage,
-      segmentId,
+      segmentAnswer.segmentId,
       answers.length,
       segmentAnswer.translationSystem,
       correctAnswers[i],
@@ -198,24 +180,4 @@ const convertSegmentAnswerToGapAnswer = (
 const checkAnswer = (answer: string, correctAnswer: string): string =>
   answer.toLowerCase() === correctAnswer.toLowerCase() ? 'YES' : 'NO';
 
-class GapAnswer {
-  constructor(
-    public gapId: string,
-    public evaluatorId: string,
-    public sourceLanguage: string,
-    public segmentId: string,
-    public numOfGapsInSentence: number,
-    public translationSystem: string,
-    public correctAnswer: string,
-    public answerGiven: string,
-    public autoAnswerMatch: string,
-    public timeTaken: number,
-    public meanTimePerGap: number,
-    public problem: string,
-    public hint: string,
-    public translation: string,
-    public source: string
-  ) {}
-}
-
-export { buildExportDataRoutes };
+export { buildExportDataRoutes, convertSegmentAnswerToGapAnswer };
