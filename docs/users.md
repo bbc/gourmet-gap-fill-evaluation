@@ -98,9 +98,10 @@ The View Results page allows the Evaluation Coordinator to export the results by
 
 ### 1. Starting the Task
 
-Participants will be shown an introduction to the Task
+Participants will be shown 2 pages covering the introduction to the Task
 
 ![](./images/index.png)
+![](./images/furtherInfo.png)
 
 ### 2. Selecting a Data Set and Evaluator ID
 
