@@ -10,7 +10,7 @@ import {
 import * as archiver from 'archiver';
 import { createWriteStream } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
-import { flatten } from 'underscore';
+import { groupBy, flatten, sortBy } from 'underscore';
 import { logger } from '../utils/logger';
 
 const buildExportDataRoutes = (app: Application) => {
@@ -116,8 +116,9 @@ const createAnswersCSVFile = (
   filename: string,
   language: string
 ) => {
+  const filteredAnswers: SegmentAnswer[] = removeDuplicateAnswers(answers);
   const gapAnswers: GapAnswer[] = flatten(
-    answers.map(answer => convertSegmentAnswerToGapAnswer(answer))
+    filteredAnswers.map(answer => convertSegmentAnswerToGapAnswer(answer))
   );
 
   const csvWriter = createObjectCsvWriter({
@@ -143,6 +144,39 @@ const createAnswersCSVFile = (
   });
 
   csvWriter.writeRecords(gapAnswers);
+};
+
+const removeDuplicateAnswers = (answers: SegmentAnswer[]): SegmentAnswer[] => {
+  const answersGroupedBySegmentId = groupBy<SegmentAnswer>(
+    answers,
+    'segmentId'
+  );
+  const segmentGroupsBySegmentId: SegmentAnswer[][] = Object.values(
+    answersGroupedBySegmentId
+  );
+
+  const filteredSegmentAnswers: SegmentAnswer[][] = segmentGroupsBySegmentId.map(
+    segment => {
+      const segmentsGroupedByEvaluatorId = groupBy<SegmentAnswer>(
+        segment,
+        'evaluatorId'
+      );
+      const segmentGroupsByEvaluatorId: SegmentAnswer[][] = Object.values(
+        segmentsGroupedByEvaluatorId
+      );
+      const segmentAnswers: SegmentAnswer[] = segmentGroupsByEvaluatorId.map(
+        segmentAnswer => {
+          const earliestSegmentAnswer = sortBy<SegmentAnswer>(
+            segmentAnswer,
+            'timestamp'
+          );
+          return earliestSegmentAnswer[0];
+        }
+      );
+      return segmentAnswers;
+    }
+  );
+  return flatten(filteredSegmentAnswers);
 };
 
 const convertSegmentAnswerToGapAnswer = (
@@ -180,4 +214,8 @@ const convertSegmentAnswerToGapAnswer = (
 const checkAnswer = (answer: string, correctAnswer: string): string =>
   answer.toLowerCase() === correctAnswer.toLowerCase() ? 'YES' : 'NO';
 
-export { buildExportDataRoutes, convertSegmentAnswerToGapAnswer };
+export {
+  buildExportDataRoutes,
+  convertSegmentAnswerToGapAnswer,
+  removeDuplicateAnswers,
+};
