@@ -147,22 +147,14 @@ const createAnswersCSVFile = (
 };
 
 const removeDuplicateAnswers = (answers: SegmentAnswer[]): SegmentAnswer[] => {
-  const answersGroupedBySegmentId = groupBy<SegmentAnswer>(
-    answers,
-    'segmentId'
-  );
   const segmentGroupsBySegmentId: SegmentAnswer[][] = Object.values(
-    answersGroupedBySegmentId
+    groupBy<SegmentAnswer>(answers, 'segmentId')
   );
 
   const filteredSegmentAnswers: SegmentAnswer[][] = segmentGroupsBySegmentId.map(
     segment => {
-      const segmentsGroupedByEvaluatorId = groupBy<SegmentAnswer>(
-        segment,
-        'evaluatorId'
-      );
       const segmentGroupsByEvaluatorId: SegmentAnswer[][] = Object.values(
-        segmentsGroupedByEvaluatorId
+        groupBy<SegmentAnswer>(segment, 'evaluatorId')
       );
       const segmentAnswers: SegmentAnswer[] = segmentGroupsByEvaluatorId.map(
         segmentAnswer => {
