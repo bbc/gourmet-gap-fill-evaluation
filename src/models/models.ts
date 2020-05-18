@@ -6,6 +6,7 @@ class SegmentSet {
     public name: string,
     public sourceLanguage: string,
     public targetLanguage: string,
+    public possibleEvaluatorIds: Set<string>,
     public segmentIds?: Set<string>,
     public evaluatorIds?: Set<string>
   ) {}
@@ -57,6 +58,7 @@ interface DatasetFile {
   targetLanguage: string;
   segments: Segment[];
   evaluatorIds: Set<string>;
+  possibleEvaluatorIds: Set<string>;
 }
 
 interface EvaluatorSet {
