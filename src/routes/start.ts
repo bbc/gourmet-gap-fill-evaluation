@@ -7,21 +7,23 @@ const buildStartRoute = (app: Application) => {
     const setName = req.query.setName;
     getSegmentSets()
       .then(segmentSets => {
-        const setsOrderedByName = segmentSets
-          .sort((a, b) => a.name.localeCompare(b.name))
+        const setsOrderedByName = segmentSets.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
 
-        const selectedSet = setsOrderedByName.find(set => set.name === setName) || null;
+        const selectedSet =
+          setsOrderedByName.find(set => set.name === setName) || null;
 
         let possibleEvaluatorIds: string[] = [];
 
-        if (selectedSet && selectedSet.evaluatorIds) {
-          possibleEvaluatorIds = Array.from(selectedSet.evaluatorIds)
+        if (selectedSet && selectedSet.possibleEvaluatorIds) {
+          possibleEvaluatorIds = Array.from(selectedSet.possibleEvaluatorIds);
         }
 
         res.render('start', {
           setName,
           segmentSets: setsOrderedByName,
-          possibleEvaluatorIds: [...possibleEvaluatorIds, "tester"],
+          possibleEvaluatorIds: [...possibleEvaluatorIds, 'tester'],
           paragraphs: [
             'The evaluation process is timed but there is no time limit.',
             'Please complete a series evaluation in an unbroken single sitting so that the timing is reflective of the time spent on the task.',

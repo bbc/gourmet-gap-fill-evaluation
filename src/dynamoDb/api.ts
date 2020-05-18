@@ -257,6 +257,10 @@ const convertAttributeMapToSegmentSet = (
 ): SegmentSet => {
   const segmentIdsSet: DocumentClient.StringSet = item['segmentIds'];
   const segmentIds = segmentIdsSet === undefined ? [] : segmentIdsSet.values;
+  const possibleEvaluatorIdsSet: DocumentClient.StringSet =
+    item['possibleEvaluatorIds'];
+  const possibleEvaluatorIds =
+    possibleEvaluatorIdsSet === undefined ? [] : possibleEvaluatorIdsSet.values;
   const evaluatorIdsSet: DocumentClient.StringSet = item['evaluatorIds'];
   const evaluatorIds =
     evaluatorIdsSet === undefined ? [] : evaluatorIdsSet.values;
@@ -265,6 +269,7 @@ const convertAttributeMapToSegmentSet = (
     item['name'],
     item['sourceLanguage'],
     item['targetLanguage'],
+    new Set(possibleEvaluatorIds),
     new Set(segmentIds),
     new Set(evaluatorIds)
   );
@@ -276,12 +281,16 @@ const convertAttributeMapToSegmentSet = (
 const constructSegmentSetItem = (segmentSet: SegmentSet) => {
   const segmentIds: Set<string> = segmentSet.segmentIds || new Set();
   const evaluatorIds: Set<string> = segmentSet.evaluatorIds || new Set();
+  const possibleEvaluatorIds: DocumentClient.DynamoDbSet = dynamoClient.createSet(
+    Array.from(segmentSet.possibleEvaluatorIds) || new Set(['tester'])
+  );
   if (segmentIds.size < 1 && evaluatorIds.size < 1) {
     return {
       setId: segmentSet.setId,
       name: segmentSet.name,
       sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
       targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+      possibleEvaluatorIds,
     };
   }
   if (segmentIds.size < 1) {
@@ -291,6 +300,7 @@ const constructSegmentSetItem = (segmentSet: SegmentSet) => {
       sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
       targetLanguage: segmentSet.targetLanguage.toUpperCase(),
       evaluatorIds: dynamoClient.createSet(Array.from(evaluatorIds)),
+      possibleEvaluatorIds,
     };
   }
   if (evaluatorIds.size < 1) {
@@ -300,6 +310,7 @@ const constructSegmentSetItem = (segmentSet: SegmentSet) => {
       name: segmentSet.name,
       sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
       targetLanguage: segmentSet.targetLanguage.toUpperCase(),
+      possibleEvaluatorIds,
     };
   } else {
     return {
@@ -309,6 +320,7 @@ const constructSegmentSetItem = (segmentSet: SegmentSet) => {
       sourceLanguage: segmentSet.sourceLanguage.toUpperCase(),
       targetLanguage: segmentSet.targetLanguage.toUpperCase(),
       evaluatorIds: dynamoClient.createSet(Array.from(evaluatorIds)),
+      possibleEvaluatorIds,
     };
   }
 };

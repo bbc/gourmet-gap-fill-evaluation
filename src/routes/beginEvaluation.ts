@@ -49,6 +49,7 @@ const addEvaluatorIdToSegmentSet = (
     segmentSet.name,
     segmentSet.sourceLanguage,
     segmentSet.targetLanguage,
+    segmentSet.possibleEvaluatorIds,
     segmentSet.segmentIds,
     evaluatorIds
   );
