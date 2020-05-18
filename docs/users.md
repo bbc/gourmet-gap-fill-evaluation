@@ -78,7 +78,8 @@ For Example:
 }
 ```
 
-- evaluatorIds: A participant will select an evaluator ID when starting the exercise. This determines the list of evaluator IDs that will be available for a given data set. The Tool will always provide the evaluator ID 'tester'. This is used for testing purposes and should not be used by an actual participant as their scores will not be shown in the results
+- possibleEvaluatorIds: A participant will select an evaluator ID when starting the exercise. This determines the list of evaluator IDs that will be available for a given data set. The Tool will always provide the evaluator ID 'tester'. This is used for testing purposes and should not be used by an actual participant as their scores will not be shown in the results
+- evaluatorIds: a list of evaluator IDs of users who completed the exercise
 
 TODO: Add link to Mikel's scripts for creating a data set once they have been open sourced.
 
