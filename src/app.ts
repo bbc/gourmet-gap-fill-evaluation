@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Application } from 'express';
 import * as multer from 'multer';
 import { Instance } from 'multer';
+import * as basicAuth from 'express-basic-auth';
 
 import { buildIndexRoute } from './routes/index';
 import { buildInstructionsRoute } from './routes/instructions';
@@ -31,6 +32,24 @@ app.use(express.static('public'));
 app.set('view engine', 'hbs');
 // Instantiate multer for uploads
 const upload: Instance = multer({ dest: 'uploads/' });
+// Enable Log in
+if (process.env.ENABLE_AUTH === 'true') {
+  if (
+    process.env.PASSWORD === undefined ||
+    process.env.USERNAME === undefined
+  ) {
+    throw new Error(
+      'Log in cannot be enabled on the tool unless a password and username are specified in the config.'
+    );
+  } else {
+    app.use(
+      basicAuth({
+        users: { [process.env.USERNAME]: process.env.PASSWORD },
+        challenge: true, // To show login UI
+      })
+    );
+  }
+}
 
 buildIndexRoute(app);
 buildInstructionsRoute(app);
