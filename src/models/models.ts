@@ -64,6 +64,7 @@ interface DatasetFile {
 interface EvaluatorSet {
   setName: string;
   evaluators: string;
+  targetLanguage: string;
 }
 
 class GapAnswer {

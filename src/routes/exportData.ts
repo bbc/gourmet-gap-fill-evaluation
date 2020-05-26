@@ -20,18 +20,15 @@ const buildExportDataRoutes = (app: Application) => {
 
 const getExportData = (app: Application) => {
   app.get('/exportData', (req: Request, res: Response) => {
-    const languageOptions = [
-      { language: 'bg', displayName: 'Bulgarian' },
-      { language: 'gu', displayName: 'Gujarati' },
-      { language: 'sw', displayName: 'Swahili' },
-      { language: 'tr', displayName: 'Turkish' },
-    ];
-
     getSegmentSets()
       .then(segmentSets => {
         const evaluatorSets = segmentSets
           .sort((a, b) => a.name.localeCompare(b.name))
           .map(segmentSet => convertSegmentSetToEvaluatorSet(segmentSet));
+        const languages = evaluatorSets.map(set => set.targetLanguage);
+        const languageOptions: string[] = languages.filter(
+          (item, index) => languages.indexOf(item) === index
+        );
         res.status(200).render('exportData', {
           languageOptions,
           evaluatorSets,
@@ -40,7 +37,7 @@ const getExportData = (app: Application) => {
       .catch(error => {
         logger.error(`Could not get segment sets. Error: ${error}`);
         res.status(200).render('exportData', {
-          languageOptions,
+          languageOptions: [],
           evaluatorSets: [],
         });
       });
@@ -58,6 +55,7 @@ const convertSegmentSetToEvaluatorSet = (
   return {
     setName: segmentSet.name,
     evaluators: evaluatorIdsAsString,
+    targetLanguage: segmentSet.targetLanguage,
   };
 };
 
