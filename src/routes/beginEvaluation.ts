@@ -1,11 +1,11 @@
-import { Response, Application } from 'express';
+import { Response, Router } from 'express';
 import { putSegmentSet, getSegmentSets } from '../dynamoDb/api';
 import { StartRequest } from '../models/requests';
 import { SegmentSet } from '../models/models';
 import { logger } from '../utils/logger';
 
-const buildBeginEvaluationRoute = (app: Application) => {
-  app.post('/beginEvaluation', (req: StartRequest, res: Response) => {
+const buildBeginEvaluationRoute = (router: Router) => {
+  router.post('/beginEvaluation', (req: StartRequest, res: Response) => {
     const setName = req.body.setName;
     findSet(setName)
       .then(segmentSet => {
@@ -16,7 +16,7 @@ const buildBeginEvaluationRoute = (app: Application) => {
               segmentSet.segmentIds || new Set()
             );
             res.redirect(
-              `/evaluation?setId=${segmentSet.setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&segmentNum=0`
+              `/auth/evaluation?setId=${segmentSet.setId}&evaluatorId=${evaluatorId}&setSize=${segmentIdsList.length}&segmentNum=0`
             );
           })
           .catch(error => {

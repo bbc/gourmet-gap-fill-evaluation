@@ -12,9 +12,9 @@ const buildInstructionsRoute = (app: Application) => {
         'If you have no hint and no clear idea just give it your best shot. Please try to make a sentence you think may have been published and avoid using words you know or suspect are not correct just because it will give an amusing outcome!',
         'If you have read the above and are happy to proceed please click ‘OK’.',
       ],
-      formSubmissionUrl: '/start',
-      datasetSubmissionUrl: '/dataset',
-      exportDataUrl: '/exportData',
+      formSubmissionUrl: '/auth/start',
+      datasetSubmissionUrl: '/auth/dataset',
+      exportDataUrl: '/auth/exportData',
     });
   });
 };

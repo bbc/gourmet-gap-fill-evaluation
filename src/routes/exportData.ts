@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { ExportRequest } from '../models/requests';
 import { getSegmentAnswers, getSegmentSets } from '../dynamoDb/api';
 import {
@@ -13,13 +13,13 @@ import { createObjectCsvWriter } from 'csv-writer';
 import { groupBy, flatten, sortBy } from 'underscore';
 import { logger } from '../utils/logger';
 
-const buildExportDataRoutes = (app: Application) => {
-  getExportData(app);
-  postExportData(app);
+const buildExportDataRoutes = (router: Router) => {
+  getExportData(router);
+  postExportData(router);
 };
 
-const getExportData = (app: Application) => {
-  app.get('/exportData', (req: Request, res: Response) => {
+const getExportData = (router: Router) => {
+  router.get('/exportData', (req: Request, res: Response) => {
     getSegmentSets()
       .then(segmentSets => {
         const evaluatorSets = segmentSets
@@ -59,8 +59,8 @@ const convertSegmentSetToEvaluatorSet = (
   };
 };
 
-const postExportData = (app: Application) => {
-  app.post('/exportData', (req: ExportRequest, res: Response) => {
+const postExportData = (router: Router) => {
+  router.post('/exportData', (req: ExportRequest, res: Response) => {
     const language: string = req.body.language;
     if (language === undefined) {
       logger.error(`Language not provided on POST request to export data`);

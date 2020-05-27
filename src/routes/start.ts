@@ -1,9 +1,9 @@
-import { Application, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { getSegmentSets } from '../dynamoDb/api';
 import { logger } from '../utils/logger';
 
-const buildStartRoute = (app: Application) => {
-  app.get('/start', (req: Request, res: Response) => {
+const buildStartRoute = (router: Router) => {
+  router.get('/start', (req: Request, res: Response) => {
     const setName = req.query.setName;
     getSegmentSets()
       .then(segmentSets => {

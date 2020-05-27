@@ -1,4 +1,4 @@
-import { Request, Response, Application } from 'express';
+import { Request, Response, Router } from 'express';
 import { getSegmentSet, getSegment, putSegmentAnswers } from '../dynamoDb/api';
 import {
   SegmentEvaluationRequest,
@@ -11,8 +11,8 @@ import {
 } from '../utils';
 import { logger } from '../utils/logger';
 
-const buildEvaluationRoutes = (app: Application) => {
-  app.post('/evaluation', (req: SegmentEvaluationRequest, res: Response) => {
+const buildEvaluationRoutes = (router: Router) => {
+  router.post('/evaluation', (req: SegmentEvaluationRequest, res: Response) => {
     const body: SegmentEvaluationRequestBody = req.body;
     const setId: string = body.setId;
     const evaluatorId: string = body.evaluatorId;
@@ -43,7 +43,7 @@ const buildEvaluationRoutes = (app: Application) => {
     )
       .then(() =>
         res.redirect(
-          `/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${setSize}&segmentNum=${segmentNum}`
+          `/auth/evaluation?setId=${setId}&evaluatorId=${evaluatorId}&setSize=${setSize}&segmentNum=${segmentNum}`
         )
       )
       .catch(error => {
@@ -54,7 +54,7 @@ const buildEvaluationRoutes = (app: Application) => {
       });
   });
 
-  app.get('/evaluation', (req: Request, res: Response) => {
+  router.get('/evaluation', (req: Request, res: Response) => {
     const setId = req.query.setId;
     const evaluatorId = req.query.evaluatorId;
     const setSize = Number(req.query.setSize || 0);
