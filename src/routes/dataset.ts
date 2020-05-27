@@ -1,4 +1,4 @@
-import { Application, Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { Instance } from 'multer';
 import { readFileSync, unlink } from 'fs';
 import { DatasetFile, SegmentSet } from '../models/models';
@@ -6,12 +6,12 @@ import { DatasetRequest } from '../models/requests';
 import { putSegment, putSegmentSet } from '../dynamoDb/api';
 import { logger } from '../utils/logger';
 
-const buildDatasetRoutes = (app: Application, upload: Instance) => {
-  app.get('/dataset', (req: Request, res: Response) => {
+const buildDatasetRoutes = (router: Router, upload: Instance) => {
+  router.get('/dataset', (req: Request, res: Response) => {
     res.render('dataset');
   });
 
-  app.post(
+  router.post(
     '/dataset',
     upload.single('dataset'),
     (req: DatasetRequest, res: Response) => {

@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <form class="text-primary-dark-grey"
-                          action="/beginEvaluation"
+                          action="/auth/beginEvaluation"
                           method="POST">
                         <div class="row justify-content-center form-group">
                             <div class="col-md-6">
@@ -47,9 +47,9 @@
                                        list="setName-values"
                                        class="form-control"
                                        onblur="javascript:location.search = '?setName=' + this.value;"
-                                       {{#if setName}}value="{{setName}}"{{/if}}
-                                       required
-                                       >
+                                       {{#if setName}}value="{{setName}}"
+                                       {{/if}}
+                                       required>
                                 <datalist id="setName-values">
                                     {{#each segmentSets}}
                                     <option value="{{this.name}}">{{this.name}}</option>
@@ -64,7 +64,8 @@
                                         class="form-control"
                                         name="evaluatorId"
                                         required>
-                                    <option disabled selected>Pick an evaluator ID</option>
+                                    <option disabled
+                                            selected>Pick an evaluator ID</option>
                                     {{#each possibleEvaluatorIds}}
                                     <option value={{this}}>{{this}}</option>
                                     {{/each}}

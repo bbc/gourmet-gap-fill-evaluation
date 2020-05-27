@@ -12,8 +12,8 @@ const buildIndexRoute = (app: Application) => {
         'If you are happy to proceed please click ‘OK’.',
       ],
       formSubmissionUrl: '/instructions',
-      datasetSubmissionUrl: '/dataset',
-      exportDataUrl: '/exportData',
+      datasetSubmissionUrl: '/auth/dataset',
+      exportDataUrl: '/auth/exportData',
     });
   });
 };
