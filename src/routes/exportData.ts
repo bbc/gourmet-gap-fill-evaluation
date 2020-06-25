@@ -25,7 +25,7 @@ const getExportData = (router: Router) => {
         const evaluatorSets = segmentSets
           .sort((a, b) => a.name.localeCompare(b.name))
           .map(segmentSet => convertSegmentSetToEvaluatorSet(segmentSet));
-        const languages = evaluatorSets.map(set => set.targetLanguage);
+        const languages = evaluatorSets.map(set => set.sourceLanguage);
         const languageOptions: string[] = languages.filter(
           (item, index) => languages.indexOf(item) === index
         );
@@ -56,6 +56,7 @@ const convertSegmentSetToEvaluatorSet = (
     setName: segmentSet.name,
     evaluators: evaluatorIdsAsString,
     targetLanguage: segmentSet.targetLanguage,
+    sourceLanguage: segmentSet.sourceLanguage,
   };
 };
 

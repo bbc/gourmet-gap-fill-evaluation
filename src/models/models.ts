@@ -65,6 +65,7 @@ interface EvaluatorSet {
   setName: string;
   evaluators: string;
   targetLanguage: string;
+  sourceLanguage: string;
 }
 
 class GapAnswer {
