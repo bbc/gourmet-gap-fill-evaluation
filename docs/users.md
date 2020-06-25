@@ -91,7 +91,7 @@ The JSON data set is then uploaded on the 'submit data sets' page
 
 ### View Results
 
-The View Results page allows the Evaluation Coordinator to export the results by language as a CSV file. It also shows which participants have **started** the Gap Fill Task.
+The View Results page allows the Evaluation Coordinator to export the results by source language as a CSV file. It also shows which participants have **started** the Gap Fill Task.
 
 ![](./images/exportData.png)
 
