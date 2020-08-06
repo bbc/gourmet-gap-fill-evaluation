@@ -2,16 +2,25 @@ import sys
 import random
 from datetime import datetime
 
-# Script for randomising evaluation data segment order.
+"""
+REQUIREMENTS:
 
-# This script takes 2 files one with English text and one with the translation of the text.
-# The script returns 2 files (original and human translation) which contain all 
-# the segments from the file provided where the human translation is greater than 14 words
-# and where the order of the segments is randomised but remains consistent across the 2 files.
-# I.e. segment 1 in the human translation file will still be a translation of segment 1 in
-# the original file.
+The script must be run with python3.
 
-# Specify the files that are to be read in. The list must be in the same order for original, human translation and machine translation.
+SCRIPT PURPOSE:
+
+Script for randomising evaluation data segment order.
+
+INPUT:
+
+- 2 files one with English text and one with the translation of the text. Filenames specified on line 25 and 26
+
+OUTPUT:
+
+- 2 files one containing the original segments and the other containing and human translations. The order of the
+segments is randomised but remains consistent across the 2 files. I.e. segment 1 in the human translation file
+will still be a translation of segment 1 in the original file. In addition to that any segment pairs where the
+human translation is less than 15 words will be excluded from both files.
 
 original_file = "english.txt"
 human_translation_file = "translation.txt"
